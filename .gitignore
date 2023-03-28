@@ -1,0 +1,15 @@
+.env
+env/
+venv/
+node_modules/
+**.pyc
+**/__pycache__/
+old_stuff/
+**~
+**/\#*\#
+**/.\#*
+alembic.ini
+database/
+migrate.sh
+ipblacklist.txt
+badusers.txt
