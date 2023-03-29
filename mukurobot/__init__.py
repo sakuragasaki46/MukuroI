@@ -5,7 +5,7 @@ from discord import Intents
 import requests
 import sys
 
-__version__ = '0.1.1-dev'
+__version__ = '0.2.0-dev'
 
 CURRENCY_SYMBOL = '<:Macoto:1088440100158963733>'
 
@@ -20,6 +20,7 @@ def main(argv=None):
     argparser.add_argument('--enable', '-e', action='store_true', help='enable Message Content intent')
     argparser.add_argument('--check', '-x', action='store_true', help='connectivity check before starting bot')
     argparser.add_argument('--dry-run', '-d', action='store_true', help='do not start the bot')
+    #argparser.add_argument('--verbose', '-v', action='count', help='increase verbosity (print incoming messages to stdout etc.)')
 
     args = argparser.parse_args(argv or sys.argv[1:])
 
@@ -37,7 +38,7 @@ def main(argv=None):
         client.plz_check_ip = True
         from .checkip import check_ip, blacklist_from_txt_file
         try:
-            check_ip(blacklist_from_txt_file(os.environ.get('IP_BLACKLIST_FILE', 'ipblacklist.txt')), print=True)
+            check_ip(blacklist_from_txt_file(os.environ.get('IP_BLACKLIST_FILE', 'ipblacklist.txt')))
         except requests.exceptions.ConnectionError:
             print('\x1b[31mYou are offline.\x1b[39m')
 

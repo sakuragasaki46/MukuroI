@@ -1,8 +1,9 @@
 import requests
+import logging
 
-_print = print
+_log : logging.Logger = logging.getLogger(__name__)
 
-def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/json', print=False):
+def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/json'):
     resp = requests.get(endpoint)
 
     if resp.status_code != 200:
@@ -10,8 +11,7 @@ def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/
 
     ip = resp.json()['ip']
 
-    if print:
-        _print(f'IP check requested (your IP: {ip})')
+    _log.info(f'IP check requested (your IP: {ip})')
 
     if blacklist_func(ip):
         raise ValueError(f'IP address disallowed to start connections')

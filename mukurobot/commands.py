@@ -1,12 +1,14 @@
 
 import asyncio
 import random
+import logging
 from discord import Embed, Interaction, User
 from discord.app_commands import CommandTree
 
 from .models import Player
 from . import CURRENCY_SYMBOL
 
+_log : logging.Logger = logging.getLogger(__name__)
 
 def make_ct(client):
     '''Make the command tree.'''
@@ -22,7 +24,7 @@ def make_ct(client):
                 await asyncio.sleep(10.0)
                 await inter.user.kick(reason='rr command')
             except Exception:
-                print(f'\x1b[31mCould not kick {inter.user.id}\x1b[39m')
+                _log.error(f'\x1b[31mCould not kick {inter.user.id}\x1b[39m')
         else:
             await inter.response.send_message('You didn’t die. Lucky!')
 
@@ -36,10 +38,15 @@ def make_ct(client):
     async def cmd_handbook(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
-        await inter.response.send_message(embed=Embed(
+
+        embed = Embed(
             title=f'E-Handbook di {pl.discord_name}',
             color=0x0033FF
-        ))
+        )
+        embed.add_field(name='ID', value=u.id)
+        embed.add_field(name='Bilancio', value=u.balance)
+
+        await inter.response.send_message(embed=embed)
     
     return ct
 

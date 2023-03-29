@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2
+
++ Changed calls to `print()` to logging calls.
+
 ## 0.1.1
 
 + Minor fixes and improvements.
