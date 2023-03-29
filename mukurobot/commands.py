@@ -43,8 +43,8 @@ def make_ct(client):
             title=f'E-Handbook di {pl.discord_name}',
             color=0x0033FF
         )
-        embed.add_field(name='ID', value=u.id)
-        embed.add_field(name='Bilancio', value=u.balance)
+        embed.add_field(name='ID', value=pl.discord_id)
+        embed.add_field(name='Bilancio', value=pl.balance)
 
         await inter.response.send_message(embed=embed)
     
