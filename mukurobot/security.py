@@ -8,7 +8,7 @@ BAD_USERNAME_PATTERNS = (
 
 def is_bad_user(u, /, *, filename='badusers.txt'):
     for upupu in BAD_USERNAME_PATTERNS:
-        if upupu in u:
+        if upupu in u.name:
             return True
 
     uid = str(u.id)
