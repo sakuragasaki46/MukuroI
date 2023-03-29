@@ -19,6 +19,7 @@ def main(argv=None):
     argparser.add_argument('--sync',  '-s', action='store_true', help='sync commands')
     argparser.add_argument('--enable', '-e', action='store_true', help='enable Message Content intent')
     argparser.add_argument('--check', '-x', action='store_true', help='connectivity check before starting bot')
+    argparser.add_argument('--dry-run', '-d', action='store_true', help='do not start the bot')
 
     args = argparser.parse_args(argv or sys.argv[1:])
 
@@ -42,5 +43,8 @@ def main(argv=None):
 
     if args.sync:
         client.plz_do_sync = True
+
+    if args.dry_run:
+        client.is_dry_run = True
 
     client.run(os.environ['DISCORD_TOKEN'])

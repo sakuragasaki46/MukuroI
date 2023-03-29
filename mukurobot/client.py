@@ -10,10 +10,14 @@ class Mukuro(Client):
         super().__init__(*a, **ka)
         self.plz_do_sync = False
         self.plz_check_ip = False
+        self.is_dry_run = False
     async def setup_hook(self):
         if self.plz_do_sync:
             from .commands import ct
             await ct.sync()
+
+        if self.is_dry_run:
+            raise SystemExit('exit requested')
     async def on_ready(self):
         print(f'Logged in as \x1b[1m{self.user.name}#{self.user.discriminator}\x1b[22m')
         print(f'Started receiving messages…')
