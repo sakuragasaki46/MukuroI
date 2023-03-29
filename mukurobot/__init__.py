@@ -8,10 +8,10 @@ __version__ = '0.1.0-dev'
 
 CURRENCY_SYMBOL = '<:Macoto:1088440100158963733>'
 
+dotenv.load_dotenv()
+
 from .client import Mukuro
 from .commands import make_ct
-
-dotenv.load_dotenv()
 
 def main():
     argparser = argparse.ArgumentParser(description='discord bot')
