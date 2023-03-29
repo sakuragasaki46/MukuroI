@@ -4,14 +4,14 @@ import argparse
 from discord import Intents
 import requests
 
+__version__ = '0.1.0-dev'
+
+CURRENCY_SYMBOL = '<:Macoto:1088440100158963733>'
+
 from .client import Mukuro
 from .commands import make_ct
 
 dotenv.load_dotenv()
-
-__version__ = '0.1.0-dev'
-
-CURRENCY_SYMBOL = '<:Macoto:1088440100158963733>'
 
 def main():
     argparser = argparse.ArgumentParser(description='discord bot')
