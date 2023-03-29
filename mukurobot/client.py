@@ -49,36 +49,36 @@ class Mukuro(Client):
                     f'in quanto riconosciuto come malintenzionato/membro AOS.'
                 )
             except Exception:
-                pass
+                print(f'Could not DM {member.guild.name}.')
 
             try:
                 await member.guild.ban(member, reason='Bad actor/AOS member detected')
                 print(f'Banned {member.name} ({member.id})')
             except Exception:
                 print(f'\x1b[31mCould not ban {member.name} ({member.id})\x1b[39m')
-
-        pl = Player.from_object(member)
-        if not pl.daily_streak_update:
-            first_time = True
-        ds_inc = pl.update_daily_streak()
-            
-        gc = GuildConfig.from_object(member.guild)
-        if gc.main_channel_id:
-            main_channel = member.guild.get_channel(gc.main_channel_id)
         else:
-            print('Main channel not set.')
-            # retrieve main channel
-            main_channel = member.guild.system_channel
-            if main_channel:
-                gc.main_channel_id = main_channel.id
-                gc.save()
-        
-        if first_time and main_channel is not None:
-            await main_channel.send(embed=Embed(
-                title='Benvenutə!',
-                description=f'{pl.name}, sembra che sia la prima volta qui.\n' +
-                'Hai ricevuto {CURRENCY_SYMBOL} 50 come bonus 🥳'
-            ))
+            pl = Player.from_object(member)
+            if not pl.daily_streak_update:
+                first_time = True
+            ds_inc = pl.update_daily_streak()
+                
+            gc = GuildConfig.from_object(member.guild)
+            if gc.main_channel_id:
+                main_channel = member.guild.get_channel(gc.main_channel_id)
+            else:
+                print('Main channel not set.')
+                # retrieve main channel
+                main_channel = member.guild.system_channel
+                if main_channel:
+                    gc.main_channel_id = main_channel.id
+                    gc.save()
+            
+            if first_time and main_channel is not None:
+                await main_channel.send(embed=Embed(
+                    title='Benvenutə!',
+                    description=f'{pl.discord_name}, sembra che sia la prima volta qui.\n' +
+                    'Hai ricevuto {CURRENCY_SYMBOL} 50 come bonus 🥳'
+                ))
     async def on_member_ban(self, guild, u):
         print(f'Member banned: {u.name}')
 
