@@ -96,7 +96,7 @@ class Mukuro(Client):
         
         await main_channel.send(embed=Embed(
             title='Membro bannato',
-            description=f'{u.name} è statə bannatə.',
+            description=f'{u.name} ({u.id}) è statə bannatə.',
             color=0xcc0000
         ))
                 

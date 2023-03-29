@@ -5,7 +5,7 @@ from discord import Intents
 import requests
 import sys
 
-__version__ = '0.1.0-dev'
+__version__ = '0.1.0'
 
 CURRENCY_SYMBOL = '<:Macoto:1088440100158963733>'
 
