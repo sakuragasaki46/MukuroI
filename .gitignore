@@ -14,3 +14,4 @@ migrate.sh
 ipblacklist.txt
 badusers.txt
 ecosystem.config.js
+**/.*.swp

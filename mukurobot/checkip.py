@@ -20,7 +20,7 @@ def blacklist_from_txt_file(file):
     def func(ip):
         with open(file, 'r') as f:
             while line := f.readline():
-                ipline = line.strip().split('#', 1)[0]
+                ipline = line.split('#', 1)[0].strip()
                 if ip == ipline:
                     return True
         return False

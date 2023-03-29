@@ -15,7 +15,7 @@ def is_bad_user(u, /, *, filename='badusers.txt') -> bool:
 
     with open(filename, 'r') as f:
         while line := f.readline():
-            idline = line.strip().split('#', 1)[0]
+            idline = line.split('#', 1)[0].strip()
             if not idline:
                 continue
             if idline == uid:
