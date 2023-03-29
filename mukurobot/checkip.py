@@ -19,8 +19,9 @@ def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/
 def blacklist_from_txt_file(file):
     def func(ip):
         with open(file, 'r') as f:
-            ipline = f.readline().strip()
-            if ip == ipline:
-                return True
+            while line := f.readline():
+                ipline = line.strip().split('#', 1)[0]
+                if ip == ipline:
+                    return True
         return False
     return func
