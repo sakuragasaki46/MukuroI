@@ -14,13 +14,13 @@ dotenv.load_dotenv()
 from .client import Mukuro
 from .commands import make_ct
 
-def main(argv=sys.argv):
+def main(argv=None):
     argparser = argparse.ArgumentParser(description='discord bot')
     argparser.add_argument('--sync',  '-s', action='store_true', help='sync commands')
     argparser.add_argument('--enable', '-e', action='store_true', help='enable Message Content intent')
     argparser.add_argument('--check', '-x', action='store_true', help='connectivity check before starting bot')
 
-    args = argparser.parse_args(argv)
+    args = argparser.parse_args(argv or sys.argv[1:])
 
     intents = Intents.default()
     intents.members = True
