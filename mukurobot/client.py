@@ -59,14 +59,14 @@ class Mukuro(Client):
         ds_inc = pl.update_daily_streak()
             
         gc = GuildConfig.from_object(member.guild)
-        if gc.main_channel:
-            main_channel = member.guild.get_channel(gc.main_channel)
+        if gc.main_channel_id:
+            main_channel = member.guild.get_channel(gc.main_channel_id)
         else:
             print('Main channel not set.')
             # retrieve main channel
             main_channel = member.guild.system_channel
             if main_channel:
-                gc.main_channel = main_channel.id
+                gc.main_channel_id = main_channel.id
                 gc.save()
         
         if first_time and main_channel is not None:
@@ -80,14 +80,14 @@ class Mukuro(Client):
 
         gc = GuildConfig.from_object(guild)
         
-        if gc.main_channel:
-            main_channel = guild.get_channel(gc.main_channel)
+        if gc.main_channel_id:
+            main_channel = guild.get_channel(gc.main_channel_id)
         else:
             print('Main channel not set.')
             # retrieve main channel
             main_channel = guild.system_channel
             if main_channel:
-                gc.main_channel = main_channel.id
+                gc.main_channel_id = main_channel.id
                 gc.save()
         
         await main_channel.send(embed=Embed(
