@@ -1,7 +1,9 @@
 import datetime
+import re
 from peewee import *
 from playhouse.db_url import connect
 import os
+from .utils import letter_range, superscript_number
 
 database = connect(os.environ['DATABASE_URL'])
 
@@ -90,3 +92,85 @@ class GuildConfig(BaseModel):
             )
         return g
     
+# RELIGION
+
+class Bibbia(BaseModel):
+    libro = CharField(5, null=True)
+    capitolo = IntegerField(null=True)
+    versetto = IntegerField(null=True)
+    lettera = CharField(2, null=True)
+    testo = CharField(3000, null=True)
+
+    class Meta:
+        primary_key = False
+
+    @classmethod
+    def get_versetto(cls, libro, capitolo, versetto, lettera=None):
+        if lettera:
+            return cls.get(
+                (cls.libro == libro) &
+                (cls.capitolo == capitolo) &
+                (cls.versetto == versetto) &
+                (cls.lettera == lettera)
+            )
+        return cls.get(
+            (cls.libro == libro) &
+            (cls.capitolo == capitolo) &
+            (cls.versetto == versetto)
+        )
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__}: {self.libro} {self.capitolo}:{self.versetto}{self.lettera or ""}>'
+
+    @classmethod
+    def get_versetti(cls, v):
+        return cls.select().where(cls._get_versetti_query(v))
+    @classmethod
+    def _get_versetti_query(cls, v):
+        mobj = re.match(r'([A-Za-z]+) (\d+):(\d+)([a-z])?(?:-(\d+)([a-z])?)?((?:,(?:\d+:)?(?:\d+[a-z]?(?:-\d+[a-z]?)))*)', v)
+        if mobj is None:
+            raise ValueError('invalid or unsupported verse format')
+        libro, capitolo, versetto, lettera, versetto2, lettera2, rest = mobj.groups()
+        versetto = int(versetto)
+        if versetto2 is not None:
+            versetto2 = int(versetto2)
+        check_query = (
+            (cls.libro == libro) &
+            (cls.capitolo == capitolo)
+        )
+        if versetto2 and versetto != versetto2:
+            if lettera and lettera2 and lettera != lettera2:
+                check_query &= (
+                    (cls.versetto << range(versetto + 1, versetto2)) |
+                    ((cls.versetto == versetto) &
+                     (cls.lettera >= lettera)) |
+                    ((cls.versetto == versetto2) &
+                     (cls.lettera <= lettera2))
+                )
+            elif lettera:
+                check_query &= (
+                    (cls.versetto << range(versetto + 1, versetto2 + 1)) |
+                    ((cls.versetto == versetto) &
+                     (cls.lettera >= lettera))
+                )
+            elif lettera2:
+                check_query &= (
+                    (cls.versetto << range(versetto, versetto2)) |
+                    ((cls.versetto == versetto2) &
+                     (cls.lettera <= lettera2))
+                )
+            else:
+                check_query &= (cls.versetto << range(versetto, versetto2+1))
+        else:
+            check_query &= (cls.versetto == versetto)
+            if lettera:
+                if lettera2 and lettera != lettera2:
+                    check_query &= (cls.lettera << letter_range(lettera, lettera2))
+                else:
+                    check_query &= (cls.lettera == lettera)
+        if rest:
+            check_query |= cls._get_versetti_query(
+                f'{libro} {rest}' if ':' in rest.split(',')[0]
+                else f'{libro} {capitolo}:{rest}'
+            )
+        return check_query

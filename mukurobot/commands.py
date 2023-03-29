@@ -5,8 +5,8 @@ import logging
 from discord import Embed, Interaction, User
 from discord.app_commands import CommandTree
 
-from .models import Player
-from .utils import money
+from .models import Bibbia, Player
+from .utils import money, superscript_number
 
 _log : logging.Logger = logging.getLogger(__name__)
 
@@ -47,6 +47,37 @@ def make_ct(client):
         embed.add_field(name='Bilancio', value=f'{money(pl.balance)}')
 
         await inter.response.send_message(embed=embed)
+
+    @ct.command(name='bibbia', description='Leggi un versetto della Bibbia')
+    async def cmd_bibbia(inter: Interaction, v: str):
+
+        try:
+            vv = Bibbia.get_versetti(v)
+        except ValueError:
+            await inter.response.send_message(
+                content = 'Errore! Devi inserire un formato valido es. **Gn 1:1-8**'
+            )
+        
+        content = ' '.join(
+            f'{superscript_number(x.versetto)}{x.testo}'
+            for x in vv
+        )
+
+        if len(content) > 2000:
+            await inter.response.send_message(
+                content = 'Non puoi visualizzare testi da più di 2000 caratteri. Questa è una limitazione di Discord.',
+                ephemeral = True
+            )
+            return
+
+        await inter.response.send_message(
+            embeds = [
+                Embed(
+                    title = v,
+                    description = content
+                ).set_footer(text='La Bibbia (edizione CEI 2008)')
+            ]
+        )
     
     return ct
 
