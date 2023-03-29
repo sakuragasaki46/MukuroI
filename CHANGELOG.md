@@ -3,6 +3,7 @@
 ## 0.2
 
 + Changed calls to `print()` to logging calls.
++ Added `utils.py` module.
 
 ## 0.1.1
 

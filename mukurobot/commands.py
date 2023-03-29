@@ -6,7 +6,7 @@ from discord import Embed, Interaction, User
 from discord.app_commands import CommandTree
 
 from .models import Player
-from . import CURRENCY_SYMBOL
+from .utils import money
 
 _log : logging.Logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ def make_ct(client):
     async def cmd_bal(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
-        await inter.response.send_message(f'{pl.discord_name} ha {CURRENCY_SYMBOL} {pl.balance}.')
+        await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
 
     @ct.command(name='handbook', description='Apri il tuo e-handbook.')
     async def cmd_handbook(inter: Interaction, u: User = None):
@@ -44,7 +44,7 @@ def make_ct(client):
             color=0x0033FF
         )
         embed.add_field(name='ID', value=pl.discord_id)
-        embed.add_field(name='Bilancio', value=pl.balance)
+        embed.add_field(name='Bilancio', value=f'{money(pl.balance)}')
 
         await inter.response.send_message(embed=embed)
     

@@ -4,7 +4,7 @@ import logging
 
 _log : logging.Logger = logging.getLogger(__name__)
 
-from . import CURRENCY_SYMBOL
+from .utils import money
 from .models import Player, GuildConfig
 from .security import is_bad_user
 
@@ -82,7 +82,7 @@ class Mukuro(Client):
                 await main_channel.send(embed=Embed(
                     title='Benvenutə!',
                     description=f'{pl.discord_name}, sembra che sia la prima volta qui.\n' +
-                    'Hai ricevuto {CURRENCY_SYMBOL} 50 come bonus 🥳'
+                    f'Hai ricevuto {money(50)} come bonus 🥳'
                 ))
     async def on_member_ban(self, guild, u):
         _log.info(f'Member banned: {u.name}')
