@@ -63,9 +63,9 @@ def make_ct(client):
             for x in vv
         )
 
-        if len(content) > 2000:
+        if len(content) > 4000:
             await inter.response.send_message(
-                content = 'Non puoi visualizzare testi da più di 2000 caratteri. Questa è una limitazione di Discord.',
+                content = 'Non puoi visualizzare testi da più di 4000 caratteri. Questa è una limitazione di Discord.',
                 ephemeral = True
             )
             return
