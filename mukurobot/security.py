@@ -3,7 +3,7 @@ Shoot down the enemy.
 After all, the bot’s a sniper, you know.'''
 
 BAD_USERNAME_PATTERNS = (
-    'onlyfans.com', 'takaso', 'δøŝ', '是垃'
+    'onlyfans.com', 'takaso', 'δøŝ', '是垃', 'csgocases.com', 'freenitro', 'free nitro'
 )
 
 def is_bad_user(u, /, *, filename='badusers.txt') -> bool:

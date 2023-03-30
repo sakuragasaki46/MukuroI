@@ -13,6 +13,8 @@ from .client import Mukuro
 from .commands import make_ct
 
 import logging
+logging.basicConfig()
+
 _log = logging.getLogger(__name__)
 _log.setLevel(logging.INFO)
 

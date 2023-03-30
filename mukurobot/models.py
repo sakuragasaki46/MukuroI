@@ -4,8 +4,9 @@ from peewee import *
 from playhouse.db_url import connect
 import os
 from .utils import letter_range, superscript_number
+from .dbutils import connect_reconnect
 
-database = connect(os.environ['DATABASE_URL'])
+database = connect_reconnect(connect(os.environ['DATABASE_URL']))
 
 class BaseModel(Model):
     class Meta:
