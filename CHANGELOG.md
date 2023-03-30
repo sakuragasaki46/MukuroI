@@ -4,7 +4,7 @@
 
 + Changed calls to `print()` to logging calls.
 + Added `utils.py` module.
-+ Added `/bibbia` command.
++ Added `/bibbia` and `/lore` commands.
 
 ## 0.1.1
 

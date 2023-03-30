@@ -12,6 +12,10 @@ dotenv.load_dotenv()
 from .client import Mukuro
 from .commands import make_ct
 
+import logging
+_log = logging.getLogger(__name__)
+_log.setLevel(logging.INFO)
+
 def main(argv=None):
     argparser = argparse.ArgumentParser(description='discord bot')
     argparser.add_argument('--sync',  '-s', action='store_true', help='sync commands')

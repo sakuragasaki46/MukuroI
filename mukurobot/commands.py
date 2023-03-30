@@ -6,7 +6,7 @@ from discord import Embed, Interaction, User
 from discord.app_commands import CommandTree
 
 from .models import Bibbia, Player
-from .utils import money, superscript_number
+from .utils import money, superscript_number, text_ellipsis
 
 _log : logging.Logger = logging.getLogger(__name__)
 
@@ -58,17 +58,10 @@ def make_ct(client):
                 content = 'Errore! Devi inserire un formato valido es. **Gn 1:1-8**'
             )
         
-        content = ' '.join(
+        content = text_ellipsis(' '.join(
             f'{superscript_number(x.versetto)}{x.testo}'
             for x in vv
-        )
-
-        if len(content) > 4000:
-            await inter.response.send_message(
-                content = 'Non puoi visualizzare testi da più di 4000 caratteri. Questa è una limitazione di Discord.',
-                ephemeral = True
-            )
-            return
+        ), 4000)
 
         await inter.response.send_message(
             embeds = [
@@ -78,6 +71,27 @@ def make_ct(client):
                 ).set_footer(text='La Bibbia (edizione CEI 2008)')
             ]
         )
+
+    @ct.command(name='lore', description='Informazioni (lore) su un determinato soggetto.')
+    async def cmd_lore(inter: Interaction, p: str):
+        await inter.response.defer()
+
+        from .mwutils import find_page
+
+        page = await find_page(title=p)
+
+        if page:
+            await inter.followup.send(
+                embed=Embed(
+                    title=page.title,
+                    url=page.url,
+                    description=page.description,
+                ).set_footer(text='Informazioni fornite da Città del Dank')
+            )
+        else:
+            await inter.followup.send(
+                f'Pagina non trovata: **{p}**'
+            )
     
     return ct
 

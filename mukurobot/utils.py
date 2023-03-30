@@ -14,3 +14,9 @@ def superscript_number(n):
         48: 8304, 49: 185, 50: 178, 51: 179, 52: 8308,
         53: 8309, 54: 8310, 55: 8311, 56: 8312, 57: 8313
     })
+
+def text_ellipsis(text: str, length: int):
+    if len(text) < length:
+        return text
+    else:
+        return text[:length-1] + '…'
