@@ -36,8 +36,6 @@ SQL = pw.SQL
 
 def migrate(migrator: Migrator, database: pw.Database, *, fake=False):
     """Write your migrations here."""
-    
-    migrator.remove_fields('bibbia', 'id')
 
     migrator.add_fields(
         'guildconfig',
@@ -53,7 +51,3 @@ def rollback(migrator: Migrator, database: pw.Database, *, fake=False):
     
     migrator.remove_fields('guildconfig', 'daytime_end', 'cctv_channel_id', 'main_role_id', 'daytime_start')
 
-    migrator.add_fields(
-        'bibbia',
-
-        id=pw.AutoField())
