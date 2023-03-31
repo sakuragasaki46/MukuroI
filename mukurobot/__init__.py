@@ -18,7 +18,16 @@ logging.basicConfig()
 _log = logging.getLogger(__name__)
 _log.setLevel(logging.INFO)
 
+client = None
+
+def get_client() -> Mukuro | None:
+    return client
+
 def main(argv=None):
+    global client
+
+    from . import timers
+
     argparser = argparse.ArgumentParser(description='discord bot')
     argparser.add_argument('--sync',  '-s', action='store_true', help='sync commands')
     argparser.add_argument('--enable', '-e', action='store_true', help='enable Message Content intent')

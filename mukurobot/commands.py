@@ -2,7 +2,7 @@
 import asyncio
 import random
 import logging
-from discord import Embed, Interaction, User
+from discord import Embed, Interaction, Permissions, User
 from discord.app_commands import CommandTree
 
 from .models import Bibbia, Player
@@ -29,12 +29,14 @@ def make_ct(client):
             await inter.response.send_message('You didn’t die. Lucky!')
 
     @ct.command(name='bal', description='Il tuo bilancio, o quello di un altro utente.')
+    @ct.describe(u='L’utente.')
     async def cmd_bal(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
         await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
 
     @ct.command(name='handbook', description='Apri il tuo e-handbook.')
+    @ct.describe(u='L’utente.')
     async def cmd_handbook(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
@@ -49,6 +51,7 @@ def make_ct(client):
         await inter.response.send_message(embed=embed)
 
     @ct.command(name='bibbia', description='Leggi un versetto della Bibbia')
+    @ct.describe(v='Il libro, capitolo e versetto (es. Gn 1:1-12)')
     async def cmd_bibbia(inter: Interaction, v: str):
 
         try:
@@ -73,6 +76,7 @@ def make_ct(client):
         )
 
     @ct.command(name='lore', description='Informazioni (lore) su un determinato soggetto.')
+    @ct.describe(p='Il nome del soggetto.')
     async def cmd_lore(inter: Interaction, p: str):
         await inter.response.defer()
 
@@ -92,6 +96,20 @@ def make_ct(client):
             await inter.followup.send(
                 f'Pagina non trovata: **{p}**'
             )
-    
+
+    # /guildconfig suspended (reason: NO EASY WAY to make subcommands in discord.py) 
+
+    #@ct.group(name='guildconfig', description='Modifica la configurazione del server.')
+    #@ct.checks.has_permissions(manage_guild=True)
+    #async def cmd_guildconfig(inter: Interaction, k: str, v: str):
+    #    pass
+    #
+    #cmd_guildconfig.default_permissions = Permissions(
+    #    manage_guild = True
+    #)
+
+    # DO NOT INSERT NEW COMMANDS below this line! 
+
     return ct
+
 

@@ -1,3 +1,7 @@
+'''
+Someone said… models? Look at my cosplay of Junko Enoshima :)
+'''
+
 import datetime
 import re
 from peewee import *
@@ -72,11 +76,23 @@ class Player(BaseModel):
         return inc
 
 
+GUILDCONFIGKEYS = [
+    'main_channel_id',
+    'main_role_id',
+    'cctv_channel_id',
+    'daytime_start',
+    'daytime_end'
+]
+
 class GuildConfig(BaseModel):
     guild_id = BigIntegerField(unique=True)
     guild_name = CharField(64)
 
     main_channel_id = BigIntegerField(null=True)
+    main_role_id = BigIntegerField(null=True)
+    cctv_channel_id = BigIntegerField(null=True)
+    daytime_start = IntegerField(default=7 * 60, null=True)
+    daytime_end = IntegerField(default=23 * 60, null=True)
 
     # helpers
     @classmethod
@@ -93,6 +109,10 @@ class GuildConfig(BaseModel):
             )
         return g
     
+    @classmethod
+    def get_config_keys(cls, autocomplete=''):
+        return GUILDCONFIGKEYS.filter(lambda x:autocomplete in x)[:25]
+
 # RELIGION
 
 class Bibbia(BaseModel):
