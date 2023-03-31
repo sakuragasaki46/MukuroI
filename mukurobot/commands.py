@@ -3,7 +3,7 @@ import asyncio
 import random
 import logging
 from discord import Embed, Interaction, Permissions, User
-from discord.app_commands import CommandTree
+from discord.app_commands import CommandTree, describe
 
 from .models import Bibbia, Player
 from .utils import money, superscript_number, text_ellipsis
@@ -29,14 +29,14 @@ def make_ct(client):
             await inter.response.send_message('You didn’t die. Lucky!')
 
     @ct.command(name='bal', description='Il tuo bilancio, o quello di un altro utente.')
-    @ct.describe(u='L’utente.')
+    @describe(u='L’utente.')
     async def cmd_bal(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
         await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
 
     @ct.command(name='handbook', description='Apri il tuo e-handbook.')
-    @ct.describe(u='L’utente.')
+    @describe(u='L’utente.')
     async def cmd_handbook(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
@@ -51,7 +51,7 @@ def make_ct(client):
         await inter.response.send_message(embed=embed)
 
     @ct.command(name='bibbia', description='Leggi un versetto della Bibbia')
-    @ct.describe(v='Il libro, capitolo e versetto (es. Gn 1:1-12)')
+    @describe(v='Il libro, capitolo e versetto (es. Gn 1:1-12)')
     async def cmd_bibbia(inter: Interaction, v: str):
 
         try:
@@ -76,7 +76,7 @@ def make_ct(client):
         )
 
     @ct.command(name='lore', description='Informazioni (lore) su un determinato soggetto.')
-    @ct.describe(p='Il nome del soggetto.')
+    @describe(p='Il nome del soggetto.')
     async def cmd_lore(inter: Interaction, p: str):
         await inter.response.defer()
 
