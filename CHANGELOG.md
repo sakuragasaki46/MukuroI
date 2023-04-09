@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
++ Changed `connect_reconnect()` in `dbutils.py` to address some issues in Peewee + asyncio.
+
 ## 0.2
 
 + Enhanced guild configs.

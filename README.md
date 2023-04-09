@@ -10,7 +10,7 @@ Note: the bot’s messages are in Italian.
 
 This bot has multiple **unsolvable** (according to me) bugs, including:
 
-* Constantly disconnecting from the database (peewee and asyncio is a known problematic combo)
+* ~~Constantly disconnecting from the database (peewee and asyncio is a known problematic combo)~~ (maybe solved)
 * Has synchronous HTTP dependencies despite the bot being async
 * Lack of support of discord.py for nested slash commands
 
