@@ -44,6 +44,7 @@ def add_commands(bot):
             Option(User, name='u', value='L’utente.', required=False)
         ]
     )
+    @bot.user_command(name='Apri E-Handbook')
     async def cmd_handbook(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)

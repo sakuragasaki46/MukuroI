@@ -4,6 +4,7 @@
 
 + Switched to `py-cord` framework, a fork of discord.py that does support subcommands.
 + Added `/stats` command.
++ `/handbook` available as a context-menu command on users.
 
 ## 0.2.1
 
