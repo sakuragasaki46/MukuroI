@@ -11,7 +11,6 @@ from .security import is_bad_user
 class Mukuro(Bot):
     def __init__(self, *a, **ka):
         super().__init__(*a, **ka)
-        self.plz_do_sync = False
         self.plz_check_ip = False
         self.is_dry_run = False
     async def setup_hook(self):

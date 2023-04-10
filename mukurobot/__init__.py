@@ -43,7 +43,10 @@ def main(argv=None):
     if args.enable:
         intents.message_content = True
 
-    client = Mukuro(intents=intents, application_id=os.environ['DISCORD_APPLICATION_ID'])
+    client = Mukuro(
+        intents=intents, application_id=os.environ['DISCORD_APPLICATION_ID'],
+        auto_sync_commands=args.sync
+    )
 
     add_commands(client)
 
@@ -54,9 +57,6 @@ def main(argv=None):
             check_ip(blacklist_from_txt_file(os.environ.get('IP_BLACKLIST_FILE', 'ipblacklist.txt')))
         except requests.exceptions.ConnectionError:
             print('\x1b[31mYou are offline.\x1b[39m')
-
-    if args.sync:
-        client.plz_do_sync = True
 
     if args.dry_run:
         client.is_dry_run = True
