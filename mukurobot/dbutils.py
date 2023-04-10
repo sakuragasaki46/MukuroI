@@ -30,3 +30,12 @@ def connect_reconnect(db):
     db._state = PeeweeConnectionState()
     
     return db
+
+class ConnectToDatabase(object):
+    def __init__(self, db):
+        self.db = db
+    async def __aenter__(self):
+        self.db.connect(reuse_if_open=True)
+        return self
+    async def __aexit__(self, *a):
+        self.db.close()

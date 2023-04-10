@@ -7,6 +7,7 @@ _log : logging.Logger = logging.getLogger(__name__)
 from .utils import money
 from .models import Player, GuildConfig, database
 from .security import is_bad_user
+from .dbutils import ConnectToDatabase
 
 class Mukuro(Bot):
     def __init__(self, *a, **ka):
@@ -33,10 +34,9 @@ class Mukuro(Bot):
         if message.author.bot:
             return
         
-        database.connect()
-        pl = Player.from_object(message.author)
-        pl.update_daily_streak()
-        database.close()
+        async with ConnectToDatabase(database):
+            pl = Player.from_object(message.author)
+            pl.update_daily_streak()
         
         if message.content:
             _log.debug(f'\x1b[32m{message.content}\x1b[39m')
@@ -44,80 +44,78 @@ class Mukuro(Bot):
         ## WARNING This requires a Privileged Intent.
         ## When this bot reaches 100 servers, this event handler’s code
         ## may vanish.
-        database.connect() 
+        async with ConnectToDatabase(database):
 
-        _log.info(f'Member joined: {member.name}')
+            _log.info(f'Member joined: {member.name}')
 
-        first_time = False
+            first_time = False
 
-        if is_bad_user(member):
-            try:
-                await member.send(
-                    f'Sei statə bannatə automaticamente da {member.guild.name} '
-                    f'in quanto riconosciuto come malintenzionato/membro AOS.'
-                )
-            except Exception:
-                _log.warn(f'Could not DM {member.guild.name}.')
+            if is_bad_user(member):
+                try:
+                    await member.send(
+                        f'Sei statə bannatə automaticamente da {member.guild.name} '
+                        f'in quanto riconosciuto come malintenzionato/membro AOS.'
+                    )
+                except Exception:
+                    _log.warn(f'Could not DM {member.guild.name}.')
 
-            try:
-                await member.guild.ban(member, reason='Bad actor/AOS member detected')
-                _log.info(f'Banned {member.name} ({member.id})')
-            except Exception:
-                _log.error(f'\x1b[31mCould not ban {member.name} ({member.id})\x1b[39m')
-        else:
-            pl = Player.from_object(member)
-            if not pl.daily_streak_update:
-                first_time = True
-            ds_inc = pl.update_daily_streak()
+                try:
+                    await member.guild.ban(member, reason='Bad actor/AOS member detected')
+                    _log.info(f'Banned {member.name} ({member.id})')
+                except Exception:
+                    _log.error(f'\x1b[31mCould not ban {member.name} ({member.id})\x1b[39m')
+            else:
+                pl = Player.from_object(member)
+                if not pl.daily_streak_update:
+                    first_time = True
+                ds_inc = pl.update_daily_streak()
+                    
+                gc = GuildConfig.from_object(member.guild)
+                if gc.main_channel_id:
+                    main_channel = member.guild.get_channel(gc.main_channel_id)
+                else:
+                    _log.warn('Main channel not set. Checking if there is a system channel…')
+                    # retrieve main channel
+                    main_channel = member.guild.system_channel
+                    if main_channel:
+                        gc.main_channel_id = main_channel.id
+                        gc.save()
+                    else:
+                        _log.warn('No system channel found.')
                 
-            gc = GuildConfig.from_object(member.guild)
+                if first_time and main_channel is not None:
+                    await main_channel.send(embed=Embed(
+                        title='Benvenutə!',
+                        description=f'{pl.discord_name}, sembra che sia la prima volta qui.\n' +
+                        f'Hai ricevuto {money(50)} come bonus 🥳'
+                    ))
+        
+    async def on_member_ban(self, guild, u):
+        async with ConnectToDatabase(database):
+            _log.info(f'Member banned: {u.name}')
+
+            gc = GuildConfig.from_object(guild)
+            
             if gc.main_channel_id:
-                main_channel = member.guild.get_channel(gc.main_channel_id)
+                main_channel = guild.get_channel(gc.main_channel_id)
             else:
                 _log.warn('Main channel not set. Checking if there is a system channel…')
                 # retrieve main channel
-                main_channel = member.guild.system_channel
+                main_channel = guild.system_channel
                 if main_channel:
                     gc.main_channel_id = main_channel.id
                     gc.save()
                 else:
                     _log.warn('No system channel found.')
             
-            if first_time and main_channel is not None:
-                await main_channel.send(embed=Embed(
-                    title='Benvenutə!',
-                    description=f'{pl.discord_name}, sembra che sia la prima volta qui.\n' +
-                    f'Hai ricevuto {money(50)} come bonus 🥳'
-                ))
-        
-        database.close()
-    async def on_member_ban(self, guild, u):
-        database.connect()
-        _log.info(f'Member banned: {u.name}')
-
-        gc = GuildConfig.from_object(guild)
-        
-        if gc.main_channel_id:
-            main_channel = guild.get_channel(gc.main_channel_id)
-        else:
-            _log.warn('Main channel not set. Checking if there is a system channel…')
-            # retrieve main channel
-            main_channel = guild.system_channel
-            if main_channel:
-                gc.main_channel_id = main_channel.id
-                gc.save()
-            else:
-                _log.warn('No system channel found.')
-        
-        await main_channel.send(embed=Embed(
-            title='Membro bannato',
-            description=f'{u.name} ({u.id}) è statə bannatə.',
-            color=0xcc0000
-        ))
-        database.close()
+            await main_channel.send(embed=Embed(
+                title='Membro bannato',
+                description=f'{u.name} ({u.id}) è statə bannatə.',
+                color=0xcc0000
+            ))
     async def on_interaction(self, interaction):
-        database.connect()
-        await super().on_interaction(interaction)    
-        database.close()            
+        async with ConnectToDatabase(database):
+            await super().on_interaction(interaction)    
+                   
 
 
