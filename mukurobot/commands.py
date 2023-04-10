@@ -38,6 +38,23 @@ def add_commands(bot):
         pl = Player.from_object(u)
         await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
 
+
+    @bot.command(
+        name='rich', description='Utenti più ricchi.'
+    )
+    async def cmd_rich(inter: Interaction):
+        richest = Player.select().order_by(Player.balance.desc()).limit(10)
+
+        await inter.response.send_message(
+            embed=Embed(
+                title='Utenti più ricchi',
+                description='\n'.join(
+                    f'**#{i+1}** - {u.discord_name} <@{u.discord_id}> ({money(u.balance)})'
+                    for i, u in enumerate(richest)
+                )
+            )
+        )
+
     @bot.command(
         name='handbook', description='Apri il tuo e-handbook.',
         options=[
@@ -97,6 +114,8 @@ def add_commands(bot):
     )
     async def cmd_lore(inter: Interaction, p: str, source: str = 'auto'):
         await inter.response.defer()
+
+        source = source or 'auto'
 
         from .mwutils import find_page
         

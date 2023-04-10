@@ -1,8 +1,12 @@
+import logging
+
 from discord import Enum
 from mediawiki import MediaWiki
 from mediawiki.exceptions import PageError
 
 from collections import namedtuple, OrderedDict
+
+_log = logging.getLogger(__name__)
 
 from .utils import text_ellipsis
 
@@ -21,21 +25,23 @@ mw_site_names = {
 
 PageObj = namedtuple('Page', 'url title description source_name')
 
-async def find_page(title, source: str):
+async def find_page(title, source: str = 'auto'):
     if source == 'auto':
-        sources = list(mws)
+        sources = list(mws.keys())
     else:
         sources = [source]
     for s in sources:
         try:
             mw = mws[s]
         except KeyError:
-            return None
+            _log.error(f'Source not recognized: {s!r}')
+            continue
     
         try:
             p = mw.page(title)
             return PageObj(p.url, p.title, text_ellipsis(p.content, 4000), mw_site_names[s])
         except PageError:
+            _log.info(f'Page not found on {s!r}')
             pass
     else:
         return None
