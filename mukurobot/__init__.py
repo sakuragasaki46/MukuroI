@@ -5,12 +5,12 @@ from discord import Intents
 import requests
 import sys
 
-__version__ = '0.2.1'
+__version__ = '0.3.0-dev'
 
 dotenv.load_dotenv()
 
 from .client import Mukuro
-from .commands import make_ct
+from .commands import add_commands
 
 import logging
 logging.basicConfig()
@@ -45,7 +45,7 @@ def main(argv=None):
 
     client = Mukuro(intents=intents, application_id=os.environ['DISCORD_APPLICATION_ID'])
 
-    ct = make_ct(client)
+    add_commands(client)
 
     if args.check:
         client.plz_check_ip = True

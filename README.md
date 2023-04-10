@@ -6,16 +6,6 @@ It provides autoban and a cool minigame (coming soon).
 
 Note: the bot’s messages are in Italian.
 
-## Development Warning
-
-This bot has multiple **unsolvable** (according to me) bugs, including:
-
-* ~~Constantly disconnecting from the database (peewee and asyncio is a known problematic combo)~~ (maybe solved)
-* Has synchronous HTTP dependencies despite the bot being async
-* Lack of support of discord.py for nested slash commands
-
-For this reasons, I am no longer updating the project and you should not run it.  I decided to rewrite the bot with a different codebase.
-
 ## Deployment
 
 The bot requires Python 3.10+ in order to run.
@@ -33,3 +23,6 @@ Recommended steps:
 * Run all the migrations: `pw_migrate python3 -m peewee_migrate migrate --database="$DATABASE_URL"`
 * Done! You can now run this bot as a script.
 
+## Caveats
+
+* It has synchronous HTTP dependencies despite the bot being async.

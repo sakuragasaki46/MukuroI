@@ -1,26 +1,21 @@
-from discord import Client, Embed, Member
+from discord import Bot, Embed, Member
 import os
 import logging
 
 _log : logging.Logger = logging.getLogger(__name__)
 
 from .utils import money
-from .models import Player, GuildConfig
+from .models import Player, GuildConfig, database
 from .security import is_bad_user
 
-class Mukuro(Client):
+class Mukuro(Bot):
     def __init__(self, *a, **ka):
         super().__init__(*a, **ka)
         self.plz_do_sync = False
         self.plz_check_ip = False
         self.is_dry_run = False
     async def setup_hook(self):
-        if self.plz_do_sync:
-            from .commands import ct
-            await ct.sync()
-
-        if self.is_dry_run:
-            raise SystemExit('exit requested')
+        pass
     async def on_ready(self):
         _log.info(f'Logged in as \x1b[1m{self.user.name}#{self.user.discriminator}\x1b[22m')
         _log.info(f'Started receiving messages…')
@@ -34,9 +29,11 @@ class Mukuro(Client):
         )
         if message.author.bot:
             return
-
+        
+        database.connect()
         pl = Player.from_object(message.author)
         pl.update_daily_streak()
+        database.close()
         
         if message.content:
             _log.debug(f'\x1b[32m{message.content}\x1b[39m')
@@ -106,6 +103,9 @@ class Mukuro(Client):
             description=f'{u.name} ({u.id}) è statə bannatə.',
             color=0xcc0000
         ))
-                
+    async def on_interaction(self, interaction):
+        database.connect()
+        await super().on_interaction(interaction)    
+        database.close()            
 
 

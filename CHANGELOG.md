@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3
+
++ Switched to `py-cord` framework, a fork of discord.py that does support subcommands.
++ Added `/stats` command.
+
 ## 0.2.1
 
 + Changed `connect_reconnect()` in `dbutils.py` to address some issues in Peewee + asyncio.

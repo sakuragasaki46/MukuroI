@@ -1,22 +1,21 @@
 
 import asyncio
+from pydoc import describe
 import random
 import logging
-from discord import Embed, Interaction, Permissions, User
-from discord.app_commands import CommandTree, describe
+from discord import Embed, Enum, Interaction, Option, Permissions, User, __version__ as discord_version
 
-from .models import Bibbia, Player
+from . import __version__ as mukuro_version
+from .models import Bibbia, Player, database
 from .utils import money, superscript_number, text_ellipsis
 
 _log : logging.Logger = logging.getLogger(__name__)
 
-def make_ct(client):
+
+def add_commands(bot):
     '''Make the command tree.'''
-    global ct
 
-    ct = CommandTree(client)
-
-    @ct.command(name='rr', description='Roulette russa. Hai 1/6 di possibilità di essere bannatə /s')
+    @bot.command(name='rr', description='Roulette russa. Hai 1/6 di possibilità di essere bannatə /s')
     async def cmd_rr(inter: Interaction):
         if random.randint(1, 6) == 6:
             await inter.response.send_message('Pew! You died.')
@@ -28,15 +27,23 @@ def make_ct(client):
         else:
             await inter.response.send_message('You didn’t die. Lucky!')
 
-    @ct.command(name='bal', description='Il tuo bilancio, o quello di un altro utente.')
-    @describe(u='L’utente.')
+    @bot.command(
+        name='bal', description='Il tuo bilancio, o quello di un altro utente.',
+        options=[
+            Option(User, name='u', value='L’utente.', required=False)
+        ]
+    )
     async def cmd_bal(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
         await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
 
-    @ct.command(name='handbook', description='Apri il tuo e-handbook.')
-    @describe(u='L’utente.')
+    @bot.command(
+        name='handbook', description='Apri il tuo e-handbook.',
+        options=[
+            Option(User, name='u', value='L’utente.', required=False)
+        ]
+    )
     async def cmd_handbook(inter: Interaction, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
@@ -50,8 +57,12 @@ def make_ct(client):
 
         await inter.response.send_message(embed=embed)
 
-    @ct.command(name='bibbia', description='Leggi un versetto della Bibbia')
-    @describe(v='Il libro, capitolo e versetto (es. Gn 1:1-12)')
+    @bot.command(
+        name='bibbia', description='Leggi un versetto della Bibbia',
+        options=[
+            Option(name='v', description='Il libro, capitolo e versetto (es. Gn 1:1-12)')
+        ]
+    )
     async def cmd_bibbia(inter: Interaction, v: str):
 
         try:
@@ -75,14 +86,20 @@ def make_ct(client):
             ]
         )
 
-    @ct.command(name='lore', description='Informazioni (lore) su un determinato soggetto.')
-    @describe(p='Il nome del soggetto.')
-    async def cmd_lore(inter: Interaction, p: str):
+    @bot.command(
+        name='lore', description='Informazioni (lore) su un determinato soggetto.',
+        options=[
+            Option(name='p', description='Il soggetto.'),
+            Option(name='source', description='La fonte della lore.',
+            choices=['auto', 'wikicord', 'cdd'], required=False)
+        ]
+    )
+    async def cmd_lore(inter: Interaction, p: str, source: str = 'auto'):
         await inter.response.defer()
 
         from .mwutils import find_page
-
-        page = await find_page(title=p)
+        
+        page = await find_page(title=p, source=source)
 
         if page:
             await inter.followup.send(
@@ -90,7 +107,7 @@ def make_ct(client):
                     title=page.title,
                     url=page.url,
                     description=page.description,
-                ).set_footer(text='Informazioni fornite da Città del Dank')
+                ).set_footer(text=f'Informazioni fornite da {page.source_name}')
             )
         else:
             await inter.followup.send(
@@ -108,8 +125,16 @@ def make_ct(client):
     #    manage_guild = True
     #)
 
+    @bot.command(name='stats', description='Statistiche sul bot.')
+    async def cmd_stats(inter: Interaction):
+        await inter.response.send_message(
+            f'**Versione Pycord:** {discord_version}\n'
+            f'**Versione bot**: {mukuro_version}\n'
+            f'**Database**: {database.__class__.__name__}\n'
+        )
+
     # DO NOT INSERT NEW COMMANDS below this line! 
 
-    return ct
+    return bot
 
 
