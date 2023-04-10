@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
++ Fixed some database connection issues.
+
 ## 0.2.1
 
 + Changed `connect_reconnect()` in `dbutils.py` to address some issues in Peewee + asyncio.

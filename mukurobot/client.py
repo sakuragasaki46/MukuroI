@@ -5,7 +5,7 @@ import logging
 _log : logging.Logger = logging.getLogger(__name__)
 
 from .utils import money
-from .models import Player, GuildConfig
+from .models import Player, GuildConfig, database
 from .security import is_bad_user
 
 class Mukuro(Client):
@@ -35,8 +35,10 @@ class Mukuro(Client):
         if message.author.bot:
             return
 
+        database.connect(reuse_if_open=True)
         pl = Player.from_object(message.author)
         pl.update_daily_streak()
+        database.close()
         
         if message.content:
             _log.debug(f'\x1b[32m{message.content}\x1b[39m')
@@ -106,6 +108,9 @@ class Mukuro(Client):
             description=f'{u.name} ({u.id}) è statə bannatə.',
             color=0xcc0000
         ))
+    async def on_interaction(self, interaction):
+        database.connect(reuse_if_open=True)
+        
                 
 
 
