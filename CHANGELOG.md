@@ -3,7 +3,7 @@
 ## 0.3
 
 + Switched to `py-cord` framework, a fork of discord.py that does support subcommands.
-+ Added `/stats`, `/rich` and `/guildconfig` commands.
++ Added `/stats`, `/rich`, `/guildconfig` and `/say` commands.
 + Added multiple sources to `/lore` command.
 + `/handbook` available as a context-menu command on users.
 

@@ -8,7 +8,7 @@ Note: the bot’s messages are in Italian.
 
 ## Deployment
 
-The bot requires Python 3.10+ in order to run.
+The bot requires Python 3.10+ and a Unix-derived system in order to run.
 
 Recommended steps:
 

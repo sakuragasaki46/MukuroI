@@ -4,13 +4,15 @@ import datetime
 from pydoc import describe
 import random
 import logging
-from discord import AutocompleteContext, Embed, Enum, Interaction, Option, Permissions, User, __version__ as discord_version
+from discord import ApplicationContext, AutocompleteContext, Embed, Enum, Interaction, Option, Permissions, User, __version__ as discord_version
 
 from . import __version__ as mukuro_version
 from .client import Mukuro
 from .models import Bibbia, GuildConfig, Player, database
 from .utils import money, superscript_number, text_ellipsis
 from .dsutils import you_do_not_have_permission
+
+from . import get_client
 
 _log : logging.Logger = logging.getLogger(__name__)
 
@@ -19,7 +21,7 @@ def add_commands(bot: Mukuro):
     '''Make the command tree.'''
 
     @bot.command(name='rr', description='Roulette russa. Hai 1/6 di possibilità di essere bannatə /s')
-    async def cmd_rr(inter: Interaction):
+    async def cmd_rr(inter: ApplicationContext):
         if random.randint(1, 6) == 6:
             await inter.response.send_message('Pew! You died.')
             try:
@@ -36,7 +38,7 @@ def add_commands(bot: Mukuro):
             Option(User, name='u', value='L’utente.', required=False)
         ]
     )
-    async def cmd_bal(inter: Interaction, u: User = None):
+    async def cmd_bal(inter: ApplicationContext, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
         await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
@@ -45,7 +47,7 @@ def add_commands(bot: Mukuro):
     @bot.command(
         name='rich', description='Utenti più ricchi.'
     )
-    async def cmd_rich(inter: Interaction):
+    async def cmd_rich(inter: ApplicationContext):
         richest = Player.select().order_by(Player.balance.desc()).limit(10)
 
         await inter.response.send_message(
@@ -65,7 +67,7 @@ def add_commands(bot: Mukuro):
         ]
     )
     @bot.user_command(name='Apri E-Handbook')
-    async def cmd_handbook(inter: Interaction, u: User = None):
+    async def cmd_handbook(inter: ApplicationContext, u: User = None):
         u = u or inter.user
         pl = Player.from_object(u)
 
@@ -84,7 +86,7 @@ def add_commands(bot: Mukuro):
             Option(name='v', description='Il libro, capitolo e versetto (es. Gn 1:1-12)')
         ]
     )
-    async def cmd_bibbia(inter: Interaction, v: str):
+    async def cmd_bibbia(inter: ApplicationContext, v: str):
 
         try:
             vv = Bibbia.get_versetti(v)
@@ -115,7 +117,7 @@ def add_commands(bot: Mukuro):
             choices=['auto', 'wikicord', 'cdd'], required=False)
         ]
     )
-    async def cmd_lore(inter: Interaction, p: str, source: str = 'auto'):
+    async def cmd_lore(inter: ApplicationContext, p: str, source: str = 'auto'):
         await inter.response.defer()
 
         source = source or 'auto'
@@ -155,7 +157,7 @@ def add_commands(bot: Mukuro):
     )
 
     @bot_gc.command(name='view', description='Visualizza le variabili del server')
-    async def cmd_gc_view(inter: Interaction):
+    async def cmd_gc_view(inter: ApplicationContext):
         if not inter.user.guild_permissions.manage_guild:
             return await you_do_not_have_permission(inter)
 
@@ -188,7 +190,7 @@ def add_commands(bot: Mukuro):
             Option(str, name='v', description='Il valore della variabile.')
         ]
     )
-    async def cmd_gc_set(inter: Interaction, k: str, v: str):
+    async def cmd_gc_set(inter: ApplicationContext, k: str, v: str):
         if not inter.user.guild_permissions.manage_guild:
             return await you_do_not_have_permission(inter)
 
@@ -206,12 +208,51 @@ def add_commands(bot: Mukuro):
         )
 
     @bot.command(name='stats', description='Statistiche sul bot.')
-    async def cmd_stats(inter: Interaction):
+    async def cmd_stats(inter: ApplicationContext):
         await inter.response.send_message(
             f'**Versione Pycord:** {discord_version}\n'
             f'**Versione bot**: {mukuro_version}\n'
             f'**Database**: {database.__class__.__name__}\n'
         )
+
+
+    @bot.command(
+        name='say', description='Parla ufficialmente.',
+        options=[
+            Option(str, name='msg', description='Il tuo messaggio.')
+        ]
+    )
+    async def cmd_say(inter: ApplicationContext, msg: str):
+        await inter.response.defer()
+
+        gc = GuildConfig.from_object(inter.guild)
+
+        channel_id = gc.cctv_channel_id or gc.main_channel_id
+        if channel_id:
+            channel = get_client().get_channel(channel_id)
+            if channel:
+                try:
+                    await channel.send(msg)
+                    await inter.followup.send(
+                        "Messaggio inviato!",
+                        ephemeral=True
+                    )
+                except Exception:
+                    _log.warn(f'Could not send to channel #{channel.name}')
+                    await inter.followup.send(
+                        'Messaggio non inviato.',
+                        ephemeral=True
+                    )
+                return
+        await inter.followup.send(
+            'Non hai impostato cctv_channel_id, come pensi di poter dire qualcosa?',
+            ephemeral=True
+        )
+                
+
+    cmd_say.default_member_permissions = Permissions(
+        manage_guild=True
+    )
 
     # DO NOT INSERT NEW COMMANDS below this line! 
 
