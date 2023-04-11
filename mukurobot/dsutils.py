@@ -1,10 +1,10 @@
-from discord import Permissions
+from discord import Interaction, Permissions
 from .models import GuildConfig
-from . import get_client
 import logging
 
 _log = logging.getLogger(__name__)
 
+from . import get_client
 
 async def lockdown_guild(gc: GuildConfig):
     client = get_client()
@@ -62,3 +62,8 @@ async def unlockdown_guild(gc: GuildConfig):
     except Exception:
         _log.error(f'Could not unlockdown guild {guild.id}')
     
+async def you_do_not_have_permission(inter: Interaction):
+    return await inter.response.send_message(
+        'Non hai i permessi per eseguire questo comando!',
+        ephemeral=True
+    )

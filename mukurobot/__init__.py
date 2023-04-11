@@ -10,6 +10,15 @@ __version__ = '0.3.0-dev'
 dotenv.load_dotenv()
 
 from .client import Mukuro
+
+# I put get_client() here for circular import reasons.
+# XXX this is ugly and needs to be solved.
+
+client = None
+
+def get_client() -> Mukuro | None:
+    return client
+
 from .commands import add_commands
 
 import logging
@@ -17,11 +26,6 @@ logging.basicConfig()
 
 _log = logging.getLogger(__name__)
 _log.setLevel(logging.INFO)
-
-client = None
-
-def get_client() -> Mukuro | None:
-    return client
 
 def main(argv=None):
     global client
@@ -33,9 +37,16 @@ def main(argv=None):
     argparser.add_argument('--enable', '-e', action='store_true', help='enable Message Content intent')
     argparser.add_argument('--check', '-x', action='store_true', help='connectivity check before starting bot')
     argparser.add_argument('--dry-run', '-d', action='store_true', help='do not start the bot')
-    #argparser.add_argument('--verbose', '-v', action='count', help='increase verbosity (print incoming messages to stdout etc.)')
+    argparser.add_argument('--verbose', '-v', action='count', default=0, help='increase verbosity (print incoming messages to stdout etc.)')
 
     args = argparser.parse_args(argv or sys.argv[1:])
+
+    if args.verbose > 1:
+        _log.setLevel(logging.DEBUG)
+    elif args.verbose > 0:
+        _log.setLevel(logging.INFO)
+    else:
+        _log.setLevel(logging.WARNING)
 
     intents = Intents.default()
     intents.members = True

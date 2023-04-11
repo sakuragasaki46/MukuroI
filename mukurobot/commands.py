@@ -1,18 +1,21 @@
 
 import asyncio
+import datetime
 from pydoc import describe
 import random
 import logging
-from discord import Embed, Enum, Interaction, Option, Permissions, User, __version__ as discord_version
+from discord import AutocompleteContext, Embed, Enum, Interaction, Option, Permissions, User, __version__ as discord_version
 
 from . import __version__ as mukuro_version
-from .models import Bibbia, Player, database
+from .client import Mukuro
+from .models import Bibbia, GuildConfig, Player, database
 from .utils import money, superscript_number, text_ellipsis
+from .dsutils import you_do_not_have_permission
 
 _log : logging.Logger = logging.getLogger(__name__)
 
 
-def add_commands(bot):
+def add_commands(bot: Mukuro):
     '''Make the command tree.'''
 
     @bot.command(name='rr', description='Roulette russa. Hai 1/6 di possibilità di essere bannatə /s')
@@ -144,6 +147,63 @@ def add_commands(bot):
     #cmd_guildconfig.default_permissions = Permissions(
     #    manage_guild = True
     #)
+
+    bot_gc = bot.create_group(name='guildconfig', description='Configura le variabili del server.')
+
+    bot_gc.default_member_permissions = Permissions(
+        manage_guild=True
+    )
+
+    @bot_gc.command(name='view', description='Visualizza le variabili del server')
+    async def cmd_gc_view(inter: Interaction):
+        if not inter.user.guild_permissions.manage_guild:
+            return await you_do_not_have_permission(inter)
+
+        gc = GuildConfig.from_object(inter.guild)
+
+        tt = int(datetime.datetime.now().timestamp())
+        tt -= tt % 86400
+
+        await inter.response.send_message(
+            embed=Embed(
+                description=(
+                    f'Main Channel: <#{gc.main_channel_id}>\n'
+                    f'Main Role: <@&{gc.main_role_id}>\n'
+                    f'CCTV Channel: <#{gc.cctv_channel_id}>\n'
+                    f'Daytime Start: <t:{tt + gc.daytime_start * 60}:t>\n'
+                    f'Daytime End: <t:{tt + gc.daytime_end * 60}:t>\n'
+                )
+            ),
+            ephemeral = True
+        )
+
+    async def gc_set_autocomplete(ctx: AutocompleteContext):
+        return GuildConfig.get_config_keys(autocomplete=ctx.value)
+
+        
+    @bot_gc.command(
+        name='set', description='Imposta una variabile del server',
+        options=[
+            Option(str, name='k', description='Il nome della variabile', autocomplete=gc_set_autocomplete),
+            Option(str, name='v', description='Il valore della variabile.')
+        ]
+    )
+    async def cmd_gc_set(inter: Interaction, k: str, v: str):
+        if not inter.user.guild_permissions.manage_guild:
+            return await you_do_not_have_permission(inter)
+
+        gc = GuildConfig.from_object(inter.guild)
+
+        if nv := not gc.set_config_key(k, v):
+            return await inter.response.send_message(
+                f'Chiave non riconosciuta: **{k}**',
+                ephemeral=True
+            )
+
+        await inter.response.send_message(
+            f'Chiave **{k}** impostata a `{nv}`',
+            ephemeral=True
+        )
 
     @bot.command(name='stats', description='Statistiche sul bot.')
     async def cmd_stats(inter: Interaction):

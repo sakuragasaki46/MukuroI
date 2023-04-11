@@ -9,6 +9,7 @@ from playhouse.db_url import connect
 import os
 from .utils import letter_range, superscript_number
 from .dbutils import connect_reconnect
+from itertools import islice
 
 database = connect_reconnect(connect(os.environ['DATABASE_URL']))
 
@@ -76,15 +77,15 @@ class Player(BaseModel):
         return inc
 
 
-GUILDCONFIGKEYS = [
-    'main_channel_id',
-    'main_role_id',
-    'cctv_channel_id',
-    'daytime_start',
-    'daytime_end'
-]
-
 class GuildConfig(BaseModel):
+    CONFIGKEYS = (
+        'main_channel_id',
+        'main_role_id',
+        'cctv_channel_id',
+        'daytime_start',
+        'daytime_end'
+    )
+
     guild_id = BigIntegerField(unique=True)
     guild_name = CharField(64)
 
@@ -111,7 +112,25 @@ class GuildConfig(BaseModel):
     
     @classmethod
     def get_config_keys(cls, autocomplete=''):
-        return GUILDCONFIGKEYS.filter(lambda x:autocomplete in x)[:25]
+        return islice(filter(lambda x:autocomplete in x, cls.CONFIGKEYS), 0, 25)
+
+    def set_config_key(self, k: str, v: str):
+        if not k in self.CONFIGKEYS:
+            return None
+
+        if not v.isdigit():
+            if mg := re.match(r'(\d+):(\d+)', v):
+                v = int(mg.group(1)) * 60 + int(mg.group(2))
+            else:
+                try:
+                    v = int(re.search(r'(\d+)', v).group(1))
+                except Exception:
+                    return None
+
+        setattr(self, k, v)
+        self.save()
+        return v
+
 
 # RELIGION
 
