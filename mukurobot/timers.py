@@ -26,7 +26,7 @@ async def qhourly_task():
             channel = client.get_channel(channel_id)
             if channel:
                 try:
-                    await channel.send(f'Sono ora le {nowhour // 60}:{nowhour % 60}. Tempo di alzarsi e splendere!')
+                    await channel.send(f'Sono ora le {nowhour // 60:02}:{nowhour % 60:02}. Tempo di alzarsi e splendere!')
                 except Exception:
                     _log.warn(f'Could not send to channel #{channel.name}')
             
@@ -37,7 +37,7 @@ async def qhourly_task():
             channel = client.get_channel(channel_id)
             if channel:
                 try:
-                    await channel.send(f'Sono ora le {nowhour // 60}:{nowhour % 60}. '
+                    await channel.send(f'Sono ora le {nowhour // 60:02}:{nowhour % 60:02}. '
                     'A breve il server sarà bloccato in scrittura. '
                     'Buona notte e sogni d’oro!')
                 except Exception:
