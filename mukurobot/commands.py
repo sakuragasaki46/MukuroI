@@ -22,15 +22,17 @@ def add_commands(bot: Mukuro):
 
     @bot.command(name='rr', description='Roulette russa. Hai 1/6 di possibilità di essere bannatə /s')
     async def cmd_rr(inter: ApplicationContext):
+        gc = GuildConfig.from_object(inter.guild)
+        T = gc.get_translate()
         if random.randint(1, 6) == 6:
-            await inter.response.send_message('Pew! You died.')
-            try:
-                await asyncio.sleep(10.0)
-                await inter.user.kick(reason='rr command')
-            except Exception:
-                _log.error(f'\x1b[31mCould not kick {inter.user.id}\x1b[39m')
+            await inter.response.send_message(T('rr-died'))
+            #try:
+            #    await asyncio.sleep(10.0)
+            #    await inter.user.kick(reason='rr command')
+            #except Exception:
+            #    _log.error(f'\x1b[31mCould not kick {inter.user.id}\x1b[39m')
         else:
-            await inter.response.send_message('You didn’t die. Lucky!')
+            await inter.response.send_message(T('rr-not-died'))
 
     @bot.command(
         name='bal', description='Il tuo bilancio, o quello di un altro utente.',
@@ -174,6 +176,7 @@ def add_commands(bot: Mukuro):
                     f'CCTV Channel: <#{gc.cctv_channel_id}>\n'
                     f'Daytime Start: <t:{tt + gc.daytime_start * 60}:t>\n'
                     f'Daytime End: <t:{tt + gc.daytime_end * 60}:t>\n'
+                    f'Language: **{gc.language}**\n'
                 )
             ),
             ephemeral = True

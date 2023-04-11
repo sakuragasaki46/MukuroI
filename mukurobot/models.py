@@ -7,6 +7,8 @@ import re
 from peewee import *
 from playhouse.db_url import connect
 import os
+
+from .i18n import get_language
 from .utils import letter_range, superscript_number
 from .dbutils import connect_reconnect
 from itertools import islice
@@ -83,7 +85,8 @@ class GuildConfig(BaseModel):
         'main_role_id',
         'cctv_channel_id',
         'daytime_start',
-        'daytime_end'
+        'daytime_end',
+        'language'
     )
 
     guild_id = BigIntegerField(unique=True)
@@ -94,6 +97,7 @@ class GuildConfig(BaseModel):
     cctv_channel_id = BigIntegerField(null=True)
     daytime_start = IntegerField(default=7 * 60, null=True)
     daytime_end = IntegerField(default=23 * 60, null=True)
+    language = CharField(16, default='en')
 
     # helpers
     @classmethod
@@ -118,7 +122,7 @@ class GuildConfig(BaseModel):
         if not k in self.CONFIGKEYS:
             return None
 
-        if not v.isdigit():
+        if isinstance(getattr(self, k), (IntegerField, BigIntegerField)) and not v.isdigit():
             if mg := re.match(r'(\d+):(\d+)', v):
                 v = int(mg.group(1)) * 60 + int(mg.group(2))
             else:
@@ -130,6 +134,9 @@ class GuildConfig(BaseModel):
         setattr(self, k, v)
         self.save()
         return v
+
+    def get_translate(self):
+        return get_language(self.language)
 
 
 # RELIGION
