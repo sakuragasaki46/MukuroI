@@ -196,7 +196,7 @@ def add_commands(bot: Mukuro):
 
         gc = GuildConfig.from_object(inter.guild)
 
-        if nv := not gc.set_config_key(k, v):
+        if not(nv := gc.set_config_key(k, v)):
             return await inter.response.send_message(
                 f'Chiave non riconosciuta: **{k}**',
                 ephemeral=True
