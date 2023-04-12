@@ -7,6 +7,7 @@
 + Added multiple sources to `/lore` command.
 + `/handbook` available as a context-menu command on users.
 + Basic I18n is introduced. Language can now be set on a per-guild basis.
++ Command descriptions are now internationalized in Italian and English.
 
 ## 0.2.1
 

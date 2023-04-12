@@ -1,10 +1,12 @@
 # MukuroI
 
-A discord bot. Yes, I made it thinking about the “16th student”.
+A discord bot for security and fun.
+
+Yes, I made it thinking about the “16th student”, althought I am not a kinnie of that character.
 
 It provides autoban and a cool minigame (coming soon).
 
-Note: the bot’s messages are in Italian.
+Note: the bot’s messages are mostly in Italian.
 
 ## Deployment
 
