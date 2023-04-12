@@ -9,6 +9,8 @@ from .models import Player, GuildConfig, database
 from .security import is_bad_user
 from .dbutils import ConnectToDatabase
 
+_client = None
+
 class Mukuro(Bot):
     def __init__(self, *a, **ka):
         super().__init__(*a, **ka)
@@ -117,5 +119,16 @@ class Mukuro(Bot):
         async with ConnectToDatabase(database):
             await super().on_interaction(interaction)    
                    
+def get_client() -> Mukuro | None:
+    return _client
+
+def set_global_client(client: Mukuro) -> Mukuro:
+    global _client
+
+    if not isinstance(client, Mukuro):
+        raise TypeError(f'only instances of {Mukuro.__class__.__name__} allowed!')
+
+    _client = client
+    return client
 
 

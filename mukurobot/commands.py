@@ -7,12 +7,10 @@ import logging
 from discord import ApplicationContext, AutocompleteContext, Embed, Enum, Interaction, Option, Permissions, User, __version__ as discord_version
 
 from . import __version__ as mukuro_version
-from .client import Mukuro
+from .client import Mukuro, get_client
 from .models import Bibbia, GuildConfig, Player, database
 from .utils import money, superscript_number, text_ellipsis
 from .dsutils import you_do_not_have_permission
-
-from . import get_client
 
 _log : logging.Logger = logging.getLogger(__name__)
 

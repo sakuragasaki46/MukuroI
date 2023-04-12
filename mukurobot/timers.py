@@ -2,7 +2,7 @@ from aiocron import crontab
 import datetime
 import logging
 
-from . import get_client
+from .client import get_client
 from .models import GuildConfig
 from .dsutils import unlockdown_guild, lockdown_guild
 

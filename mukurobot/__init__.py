@@ -9,15 +9,7 @@ __version__ = '0.3.0-dev'
 
 dotenv.load_dotenv()
 
-from .client import Mukuro
-
-# I put get_client() here for circular import reasons.
-# XXX this is ugly and needs to be solved.
-
-client = None
-
-def get_client() -> Mukuro | None:
-    return client
+from .client import Mukuro, set_global_client
 
 from .commands import add_commands
 
@@ -59,6 +51,7 @@ def main(argv=None):
         auto_sync_commands=args.sync
     )
 
+    set_global_client(client)
     add_commands(client)
 
     if args.check:
