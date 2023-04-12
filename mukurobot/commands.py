@@ -18,7 +18,13 @@ _log : logging.Logger = logging.getLogger(__name__)
 def add_commands(bot: Mukuro):
     '''Make the command tree.'''
 
-    @bot.command(name='rr', description='Roulette russa. Hai 1/6 di possibilità di essere bannatə /s')
+    @bot.command(name='rr', description='Roulette russa. Non usare questo comando',
+        description_localizations = {
+            'en-US': 'Russian Roulette. Don’t use this command',
+            'en-GB': 'Russian Roulette. Don’t use this command',
+            'it': 'Roulette russa. Non usare questo comando'
+        }
+    )
     async def cmd_rr(inter: ApplicationContext):
         gc = GuildConfig.from_object(inter.guild)
         T = gc.get_translate()
@@ -34,8 +40,13 @@ def add_commands(bot: Mukuro):
 
     @bot.command(
         name='bal', description='Il tuo bilancio, o quello di un altro utente.',
+        description_localizations={
+            'en-US': 'Your balance, or the one of another user.',
+            'en-GB': 'Your balance, or the one of another user.',
+            'it': 'Il tuo bilancio, o quello di un altro utente.'
+        },
         options=[
-            Option(User, name='u', value='L’utente.', required=False)
+            Option(User, name='u', description='L’utente.', required=False)
         ]
     )
     async def cmd_bal(inter: ApplicationContext, u: User = None):
@@ -45,14 +56,22 @@ def add_commands(bot: Mukuro):
 
 
     @bot.command(
-        name='rich', description='Utenti più ricchi.'
+        name='rich', description='Utenti più ricchi.',
+        description_localizations={
+            'en-US': 'Richest users.',
+            'en-GB': 'Richest users.',
+            'it': 'Utenti più ricchi.'
+        }
     )
     async def cmd_rich(inter: ApplicationContext):
+        gc = GuildConfig.from_object(inter.guild)
+        T = gc.get_translate()
+
         richest = Player.select().order_by(Player.balance.desc()).limit(10)
 
         await inter.response.send_message(
             embed=Embed(
-                title='Utenti più ricchi',
+                title=T('richest'),
                 description='\n'.join(
                     f'**#{i+1}** - {u.discord_name} <@{u.discord_id}> ({money(u.balance)})'
                     for i, u in enumerate(richest)
@@ -62,26 +81,47 @@ def add_commands(bot: Mukuro):
 
     @bot.command(
         name='handbook', description='Apri il tuo e-handbook.',
+        description_localizations={
+            'en-US': 'Open your e-handbook.',
+            'en-GB': 'Open your e-handbook.',
+            'fr': 'Ouvre ton manuel électronique.',
+            'it': 'Apri il tuo e-handbook.'
+        },
         options=[
             Option(User, name='u', value='L’utente.', required=False)
         ]
     )
-    @bot.user_command(name='Apri E-Handbook')
+    @bot.user_command(
+        name='Apri E-Handbook',
+        name_localizations={
+            'en-US': 'Open E-Handbook',
+            'en-GB': 'Open E-Handbook',
+            'it': 'Apri E-Handbook',
+            'fr': 'Ouvre le manuel électronique'
+        }
+    )
     async def cmd_handbook(inter: ApplicationContext, u: User = None):
+        gc = GuildConfig.from_object(inter.guild)
+        T = gc.get_translate()
         u = u or inter.user
         pl = Player.from_object(u)
 
         embed = Embed(
-            title=f'E-Handbook di {pl.discord_name}',
+            title=T('ehandbook-of').format(name=pl.discord_name),
             color=0x0033FF
         )
         embed.add_field(name='ID', value=pl.discord_id)
-        embed.add_field(name='Bilancio', value=f'{money(pl.balance)}')
+        embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
 
         await inter.response.send_message(embed=embed)
 
     @bot.command(
         name='bibbia', description='Leggi un versetto della Bibbia',
+        description_localizations={
+            'en-US': 'Read a verse of the Bible (IT)',
+            'en-GB': 'Read a verse of the Bible (IT)',
+            'it': 'Leggi un versetto della Bibbia'
+        },
         options=[
             Option(name='v', description='Il libro, capitolo e versetto (es. Gn 1:1-12)')
         ]
@@ -111,6 +151,11 @@ def add_commands(bot: Mukuro):
 
     @bot.command(
         name='lore', description='Informazioni (lore) su un determinato soggetto.',
+        description_localizations={
+            'en-US': 'Info (lore) about a certain subject (IT)',
+            "en-GB": 'Info (lore) about a certain subject (IT)',
+            'it': 'Informazioni (lore) su un determinato soggetto.'
+        },
         options=[
             Option(name='p', description='Il soggetto.'),
             Option(name='source', description='La fonte della lore.',
@@ -156,7 +201,13 @@ def add_commands(bot: Mukuro):
         manage_guild=True
     )
 
-    @bot_gc.command(name='view', description='Visualizza le variabili del server')
+    @bot_gc.command(name='view', description='Visualizza le variabili del server.',
+        description_localizations={
+            'en-US': 'View server variables.',
+            'en-GB': 'View guild variables.',
+            'it': 'Visualizza le variabili del server.'
+        }
+    )
     async def cmd_gc_view(inter: ApplicationContext):
         if not inter.user.guild_permissions.manage_guild:
             return await you_do_not_have_permission(inter)
@@ -186,6 +237,11 @@ def add_commands(bot: Mukuro):
         
     @bot_gc.command(
         name='set', description='Imposta una variabile del server',
+        description_localizations={
+            'en-US': 'Set a server variable.',
+            'en-GB': 'Set a guild variable.',
+            'it': 'Imposta una variabile del server.'
+        },
         options=[
             Option(str, name='k', description='Il nome della variabile', autocomplete=gc_set_autocomplete),
             Option(str, name='v', description='Il valore della variabile.')
@@ -208,7 +264,13 @@ def add_commands(bot: Mukuro):
             ephemeral=True
         )
 
-    @bot.command(name='stats', description='Statistiche sul bot.')
+    @bot.command(name='stats', description='Statistiche sul bot.',
+        description_localizations={
+            'en-US': 'Stats about bot.',
+            'en-GB': 'Statistics about bot.',
+            'it': 'Statistiche sul bot.'
+        }
+    )
     async def cmd_stats(inter: ApplicationContext):
         await inter.response.send_message(
             f'**Versione Pycord:** {discord_version}\n'
@@ -219,6 +281,11 @@ def add_commands(bot: Mukuro):
 
     @bot.command(
         name='say', description='Parla ufficialmente.',
+        description_localizations={
+            'en-US': 'Speak officially.',
+            'en-GB': 'Speak officially.',
+            'it': 'Parla ufficialmente.'
+        },
         options=[
             Option(str, name='msg', description='Il tuo messaggio.')
         ]
@@ -234,18 +301,18 @@ def add_commands(bot: Mukuro):
             if channel:
                 try:
                     await channel.send(msg)
-                    await inter.followup.send(
+                    await inter.response.edit_message(
                         "Messaggio inviato!",
                         ephemeral=True
                     )
                 except Exception:
                     _log.warn(f'Could not send to channel #{channel.name}')
-                    await inter.followup.send(
+                    await inter.response.edit_message(
                         'Messaggio non inviato.',
                         ephemeral=True
                     )
                 return
-        await inter.followup.send(
+        await inter.response.edit_message(
             'Non hai impostato cctv_channel_id, come pensi di poter dire qualcosa?',
             ephemeral=True
         )

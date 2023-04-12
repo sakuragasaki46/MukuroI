@@ -1,10 +1,11 @@
+from types import FunctionType
 import requests
 import logging
 
 _log : logging.Logger = logging.getLogger(__name__)
 _log.setLevel(logging.INFO)
 
-def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/json'):
+def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/json') -> None:
     resp = requests.get(endpoint)
 
     if resp.status_code != 200:
@@ -19,7 +20,7 @@ def check_ip(blacklist_func=(lambda x:False), /, *, endpoint='https://ipinfo.io/
         raise ValueError(f'IP address disallowed to start connections')
 
 def blacklist_from_txt_file(file):
-    def func(ip):
+    def func(ip) -> bool:
         with open(file, 'r') as f:
             while line := f.readline():
                 ipline = line.split('#', 1)[0].strip()

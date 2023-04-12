@@ -4,6 +4,7 @@ Someone said… models? Look at my cosplay of Junko Enoshima :)
 
 import datetime
 import re
+from discord import Guild
 from peewee import *
 from playhouse.db_url import connect
 import os
@@ -101,7 +102,7 @@ class GuildConfig(BaseModel):
 
     # helpers
     @classmethod
-    def from_object(cls, guild):
+    def from_object(cls, guild: Guild):
         try:
             g = cls.get(cls.guild_id == guild.id)
             if g.guild_name != guild.name:
@@ -110,7 +111,8 @@ class GuildConfig(BaseModel):
         except cls.DoesNotExist:
             g = cls.create(
                 guild_id = guild.id,
-                guild_name = guild.name
+                guild_name = guild.name,
+                language = guild.preferred_locale or 'en'
             )
         return g
     

@@ -20,8 +20,6 @@ _log = logging.getLogger(__name__)
 _log.setLevel(logging.INFO)
 
 def main(argv=None):
-    global client
-
     from . import timers
 
     argparser = argparse.ArgumentParser(description='discord bot')

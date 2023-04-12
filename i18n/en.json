@@ -1,4 +1,7 @@
 {
     "rr-died": "Pew! You died.",
-    "rr-not-died": "You didn’t die. Lucky!"
+    "rr-not-died": "You didn’t die. Lucky!",
+    "richest": "Richest users",
+    "ehandbook-of": "{name}’s E-Handbook",
+    "balance": "Balance"
 }
