@@ -3,6 +3,7 @@
 ## 0.3.1
 
 + Fixed a bug that gave currency to bots joining a guild.
++ `/say` now has an ephemeral response as intended. 
 
 ## 0.3
 

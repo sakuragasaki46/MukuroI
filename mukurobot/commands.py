@@ -280,7 +280,7 @@ def add_commands(bot: Mukuro):
         ]
     )
     async def cmd_say(inter: ApplicationContext, msg: str):
-        await inter.response.defer()
+        await inter.response.defer(ephemeral=True)
 
         gc = GuildConfig.from_object(inter.guild)
 
@@ -291,19 +291,16 @@ def add_commands(bot: Mukuro):
                 try:
                     await channel.send(msg)
                     await inter.response.edit_message(
-                        "Messaggio inviato!",
-                        ephemeral=True
+                        "Messaggio inviato!"
                     )
                 except Exception:
                     _log.warn(f'Could not send to channel #{channel.name}')
                     await inter.response.edit_message(
-                        'Messaggio non inviato.',
-                        ephemeral=True
+                        'Messaggio non inviato.'
                     )
                 return
         await inter.response.edit_message(
-            'Non hai impostato cctv_channel_id, come pensi di poter dire qualcosa?',
-            ephemeral=True
+            'Non hai impostato cctv_channel_id, come pensi di poter dire qualcosa?'
         )
                 
 
