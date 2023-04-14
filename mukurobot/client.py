@@ -52,7 +52,12 @@ class Mukuro(Bot):
 
             first_time = False
 
-            if is_bad_user(member):
+
+            if member.bot:
+                ## will add bot handling in 0.4.0
+                
+                pass
+            elif is_bad_user(member):
                 try:
                     await member.send(
                         f'Sei statə bannatə automaticamente da {member.guild.name} '

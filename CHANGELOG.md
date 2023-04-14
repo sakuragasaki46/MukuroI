@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
++ Fixed a bug that gave currency to bots joining a guild.
+
 ## 0.3
 
 + Switched to `py-cord` framework, a fork of discord.py that does support subcommands.

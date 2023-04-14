@@ -184,17 +184,6 @@ def add_commands(bot: Mukuro):
                 f'Pagina non trovata: **{p}**'
             )
 
-    # /guildconfig suspended (reason: NO EASY WAY to make subcommands in discord.py) 
-
-    #@ct.group(name='guildconfig', description='Modifica la configurazione del server.')
-    #@ct.checks.has_permissions(manage_guild=True)
-    #async def cmd_guildconfig(inter: Interaction, k: str, v: str):
-    #    pass
-    #
-    #cmd_guildconfig.default_permissions = Permissions(
-    #    manage_guild = True
-    #)
-
     bot_gc = bot.create_group(name='guildconfig', description='Configura le variabili del server.')
 
     bot_gc.default_member_permissions = Permissions(
