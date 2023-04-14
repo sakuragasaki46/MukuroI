@@ -1,11 +1,12 @@
+import asyncio
 import dotenv
 import os
 import argparse
 from discord import Intents
-import requests
+import aiohttp
 import sys
 
-__version__ = '0.3.0'
+__version__ = '0.4.0-dev'
 
 dotenv.load_dotenv()
 
@@ -56,9 +57,10 @@ def main(argv=None):
         client.plz_check_ip = True
         from .checkip import check_ip, blacklist_from_txt_file
         try:
-            check_ip(blacklist_from_txt_file(os.environ.get('IP_BLACKLIST_FILE', 'ipblacklist.txt')))
-        except requests.exceptions.ConnectionError:
+            asyncio.run(check_ip(blacklist_from_txt_file(os.environ.get('IP_BLACKLIST_FILE', 'ipblacklist.txt'))))
+        except aiohttp.ClientConnectionError:
             print('\x1b[31mYou are offline.\x1b[39m')
+            return
 
     if args.dry_run:
         client.is_dry_run = True

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4
+
++ Added pronouns support. Pronouns can be stored on `Player` model or fetched from PronounDB.
++ Bots now can receive a role on their own.
++ `check_ip()` is now async.
+
 ## 0.3
 
 + Switched to `py-cord` framework, a fork of discord.py that does support subcommands.

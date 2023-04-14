@@ -25,6 +25,7 @@ class Player(BaseModel):
     # identification
     discord_id = BigIntegerField(unique=True)
     discord_name = CharField(64, default='')
+    pronouns = CharField(16, null=True)
 
     # economy
     balance = IntegerField(default=0)
@@ -87,7 +88,8 @@ class GuildConfig(BaseModel):
         'cctv_channel_id',
         'daytime_start',
         'daytime_end',
-        'language'
+        'language',
+        'bot_role_id'
     )
 
     guild_id = BigIntegerField(unique=True)
@@ -99,6 +101,7 @@ class GuildConfig(BaseModel):
     daytime_start = IntegerField(default=7 * 60, null=True)
     daytime_end = IntegerField(default=23 * 60, null=True)
     language = CharField(16, default='en')
+    bot_role_id = BigIntegerField(null=True)
 
     # helpers
     @classmethod

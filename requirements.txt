@@ -1,8 +1,8 @@
 py-cord>=2.4.1
 peewee>=3.15.4
 peewee-migrate>=1.7.0
-requests>=2.25.1
 python-dotenv>=0.19.2
 pymediawiki>=0.7.2
 aiocron>=1.8
+aiohttp>=3.8.4
 pymysql>=1.0.3

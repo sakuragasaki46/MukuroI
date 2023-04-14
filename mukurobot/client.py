@@ -22,7 +22,7 @@ class Mukuro(Bot):
         _log.info(f'Logged in as \x1b[1m{self.user.name}#{self.user.discriminator}\x1b[22m')
 
         if self.is_dry_run:
-            raise SystemExit
+            exit()
 
         _log.info(f'Started receiving messages…')
     async def on_message(self, message):
@@ -47,12 +47,18 @@ class Mukuro(Bot):
         ## When this bot reaches 100 servers, this event handler’s code
         ## may vanish.
         async with ConnectToDatabase(database):
+            gc = GuildConfig.from_object(member.guild)
 
             _log.info(f'Member joined: {member.name}')
 
             first_time = False
+            
+            if member.bot:
+                bot_role = member.guild.get_role(gc.bot_role_id)
 
-            if is_bad_user(member):
+                if bot_role:
+                    await member.add_role(bot_role)
+            elif is_bad_user(member):
                 try:
                     await member.send(
                         f'Sei statə bannatə automaticamente da {member.guild.name} '
@@ -71,8 +77,7 @@ class Mukuro(Bot):
                 if not pl.daily_streak_update:
                     first_time = True
                 ds_inc = pl.update_daily_streak()
-                    
-                gc = GuildConfig.from_object(member.guild)
+                
                 if gc.main_channel_id:
                     main_channel = member.guild.get_channel(gc.main_channel_id)
                 else:
