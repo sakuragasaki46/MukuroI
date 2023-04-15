@@ -5,6 +5,7 @@
 + Added pronouns support. Pronouns can be stored on `Player` model or fetched from PronounDB.
 + Bots now can receive a role on their own.
 + `check_ip()` is now async.
++ Commands have been split into cogs.
 
 ## 0.3
 

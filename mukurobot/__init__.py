@@ -29,6 +29,7 @@ def main(argv=None):
     argparser.add_argument('--check', '-x', action='store_true', help='connectivity check before starting bot')
     argparser.add_argument('--dry-run', '-d', action='store_true', help='do not start the bot')
     argparser.add_argument('--verbose', '-v', action='count', default=0, help='increase verbosity (print incoming messages to stdout etc.)')
+    argparser.add_argument('--exclude', '-X', action='append', default=(), help='prevent the named cogs from loading')
 
     args = argparser.parse_args(argv or sys.argv[1:])
 
@@ -51,7 +52,7 @@ def main(argv=None):
     )
 
     set_global_client(client)
-    add_commands(client)
+    add_commands(client, exclude=args.exclude)
 
     if args.check:
         client.plz_check_ip = True
