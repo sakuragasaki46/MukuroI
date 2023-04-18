@@ -21,6 +21,15 @@ class BaseModel(Model):
         database = database
         table_function = lambda cls:f'{os.environ.get("DATABASE_PREFIX","")}{cls.__name__.lower()}'
 
+DANGER_LEVELS = {
+    0: 'Unspecified',
+    1: 'Innocent',
+    2: 'Safe',
+    3: 'Suspicious',
+    4: 'Dangerous',
+    5: 'Deathly'
+}
+
 class Player(BaseModel):
     # identification
     discord_id = BigIntegerField(unique=True)
@@ -31,6 +40,9 @@ class Player(BaseModel):
     balance = IntegerField(default=0)
     daily_streak = IntegerField(default=0)
     daily_streak_update = DateTimeField(null=True)
+
+    # security (to be compiled by admins)
+    danger_level = SmallIntegerField(default=0)
 
     # helpers
     @classmethod
@@ -79,6 +91,10 @@ class Player(BaseModel):
             self.save()
 
         return inc
+
+    @property
+    def danger_level_str(self):
+        return DANGER_LEVELS[self.danger_level]
 
 
 class GuildConfig(BaseModel):

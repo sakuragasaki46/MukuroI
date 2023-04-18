@@ -37,7 +37,7 @@ class Pronouns(object):
     __slots__ = ('_n', '__weakref__')
 
     def __new__(cls, ini: str = 'unspecified'):
-        obj = super().__new__()
+        obj = super().__new__(cls)
         obj._n = ini
         return obj
 
@@ -58,4 +58,5 @@ async def fetch_pronouns(discord_id: int):
             if resp.status != 200:
                 _log.warn(f'PronounDB: got status {resp.status}')
                 return None
-            return Pronouns(resp['pronouns'])
+            resp_json = await resp.json()
+            return Pronouns(resp_json['pronouns'])

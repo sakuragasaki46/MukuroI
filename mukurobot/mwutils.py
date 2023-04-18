@@ -1,6 +1,12 @@
+'''
+XXX Note of the developer: this module is not expected to block while retrieving pages.
+
+However, due to implementation issues and absence of a decent asyncio-compatible
+MediaWiki-parsing package, it blocks.
+'''
+
 import logging
 
-from discord import Enum
 from mediawiki import MediaWiki
 from mediawiki.exceptions import PageError
 

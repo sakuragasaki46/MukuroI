@@ -41,6 +41,8 @@ def main(argv=None):
         _log.setLevel(logging.WARNING)
 
     intents = Intents.default()
+
+    # may disappear when the bot reaches 100 guilds
     intents.members = True
 
     if args.enable:

@@ -3,6 +3,7 @@ from discord.ext.commands import Cog
 
 from ..utils import money
 from ..models import GuildConfig, Player
+from ..inclusion import fetch_pronouns, Pronouns
 
 
 class HandbookCog(Cog):
@@ -34,7 +35,9 @@ class HandbookCog(Cog):
         gc = GuildConfig.from_object(inter.guild)
         T = gc.get_translate()
         u = u or inter.user
-        pl = Player.from_object(u)
+        pl: Player = Player.from_object(u)
+
+        await inter.response.defer()
 
         embed = Embed(
             title=T('ehandbook-of').format(name=pl.discord_name),
@@ -42,5 +45,13 @@ class HandbookCog(Cog):
         )
         embed.add_field(name='ID', value=pl.discord_id)
         embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
+        embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
+        if pl.pronouns:
+            pronouns = Pronouns(pl.pronouns)
+        else:
+            pronouns = await fetch_pronouns(pl.discord_id)
+            pl.pronouns = pronouns.short
+            pl.save()
+        embed.add_field(name='Pronouns', value=f'{pronouns}')
 
-        await inter.response.send_message(embed=embed)
+        await inter.followup.send(embed=embed)

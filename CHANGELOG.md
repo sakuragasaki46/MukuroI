@@ -6,6 +6,7 @@
 + Bots now can receive a role on their own.
 + `check_ip()` is now async.
 + Commands have been split into cogs.
++ Added pronouns and danger level to `/handbook` command.
 
 ## 0.3
 
