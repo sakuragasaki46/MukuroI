@@ -4,7 +4,8 @@ Someone said… models? Look at my cosplay of Junko Enoshima :)
 
 import datetime
 import re
-from discord import Guild
+import warnings
+from discord import Guild, User
 from peewee import *
 from playhouse.db_url import connect
 import os
@@ -46,10 +47,10 @@ class Player(BaseModel):
 
     # helpers
     @classmethod
-    def from_object(cls, user):
+    def from_object(cls, user: User):
         try:
             p = cls.get(cls.discord_id == user.id)
-            if p.discord_name != user.name:
+            if user.name is not None and p.discord_name != user.name:
                 p.discord_name = user.name
                 p.save()
         except cls.DoesNotExist:
@@ -97,6 +98,10 @@ class Player(BaseModel):
         return DANGER_LEVELS[self.danger_level]
 
 
+GC_NONE = 0
+GC_TRANSITIONAL = 1
+GC_STRICT = 2
+
 class GuildConfig(BaseModel):
     CONFIGKEYS = (
         'main_channel_id',
@@ -105,7 +110,8 @@ class GuildConfig(BaseModel):
         'daytime_start',
         'daytime_end',
         'language',
-        'bot_role_id'
+        'bot_role_id',
+        'risk_checking'
     )
 
     guild_id = BigIntegerField(unique=True)
@@ -118,6 +124,8 @@ class GuildConfig(BaseModel):
     daytime_end = IntegerField(default=23 * 60, null=True)
     language = CharField(16, default='en')
     bot_role_id = BigIntegerField(null=True)
+    risk_checking = SmallIntegerField(default=GC_TRANSITIONAL)
+
 
     # helpers
     @classmethod
@@ -158,6 +166,11 @@ class GuildConfig(BaseModel):
 
     def get_translate(self):
         return get_language(self.language)
+
+    def check_bad_user(self, pl: Player) -> bool:
+        return pl.danger_level >= 5 or (
+            self.risk_checking >= GC_STRICT and pl.danger_level == 4
+        )
 
 
 # RELIGION

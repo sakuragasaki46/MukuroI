@@ -20,3 +20,4 @@ def text_ellipsis(text: str, length: int):
         return text
     else:
         return text[:length-1] + '…'
+

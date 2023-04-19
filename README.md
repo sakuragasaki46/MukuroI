@@ -4,7 +4,7 @@ A discord bot for security and fun.
 
 Yes, I made it thinking about the “16th student”, althought I am not a kinnie of that character.
 
-It provides autoban and a cool minigame (coming soon).
+It provides autoban based on user lists and a cool minigame (coming soon).
 
 Note: the bot’s messages are mostly in Italian.
 
@@ -22,6 +22,8 @@ The configurable variables are:
   according to your time zone. Moreover, only precise quarter hours work (i.e. `:00`, `:15`, `:30` and `:45`)
 * **Daytime End**: The lockdown hour, in UTC format. Same considerations as above.
 * **Language**: The guild locale. Currently supported are Italian and English locale.
+* **Bot role**: The role assigned to all bots.
+* **Risk checking**: transitional (1), strict (2) or disabled (0). Defaults to transitional.
 
 ## Deployment
 
@@ -40,6 +42,19 @@ Recommended steps:
 * Run all the migrations: `pw_migrate python3 -m peewee_migrate migrate --database="$DATABASE_URL"`
 * Done! You can now run this bot as a script.
 
+## Management
+
+To simplify management, I created a script named Handbook. You can run it by running 
+`python3 -m mukurobot.handbook`.
+Here you can easily view user info (please note no personal info is collected aside from Discord IDs and names),
+set risk level on users, and export `badusers.txt`.
+
+`badusers.txt` is a list of potentially dangerous user IDs. To prevent sharing PII, I did not ship it with the bot, but
+you have to ask me personally for it.
+
+Also, the definition of “dangerous” is subjective, so every instance of this bot has a list on its own.
+
 ## Caveats
 
 * It has synchronous HTTP dependencies despite the bot being async.
+* The whole code has no tests.

@@ -58,7 +58,7 @@ class Mukuro(Bot):
 
                 if bot_role:
                     await member.add_role(bot_role)
-            elif is_bad_user(member):
+            elif gc.check_bad_user(pl := Player.from_object(member)):
                 try:
                     await member.send(
                         f'Sei statə bannatə automaticamente da {member.guild.name} '
@@ -73,7 +73,6 @@ class Mukuro(Bot):
                 except Exception:
                     _log.error(f'\x1b[31mCould not ban {member.name} ({member.id})\x1b[39m')
             else:
-                pl = Player.from_object(member)
                 if not pl.daily_streak_update:
                     first_time = True
                 ds_inc = pl.update_daily_streak()

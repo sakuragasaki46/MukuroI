@@ -7,6 +7,8 @@
 + `check_ip()` is now async.
 + Commands have been split into cogs.
 + Added pronouns and danger level to `/handbook` command.
++ Added handbook CLI, for use by the bot admin.
++ `badusers.txt` changed file format: it now is a list in format `<id>!<danger_level>`.
 
 ## 0.3
 

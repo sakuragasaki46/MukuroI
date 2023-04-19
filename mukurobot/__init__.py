@@ -13,6 +13,9 @@ dotenv.load_dotenv()
 from .client import Mukuro, set_global_client
 
 from .commands import add_commands
+from .security import parse_bad_users
+from .dbutils import ConnectToDatabase
+from .models import database, Player
 
 import logging
 logging.basicConfig()
@@ -55,6 +58,25 @@ def main(argv=None):
 
     set_global_client(client)
     add_commands(client, exclude=args.exclude)
+
+    # update list of dangerous users on each startup
+
+    database.connect()
+    count = 0
+    for uid, ulevel in parse_bad_users():
+        try:
+            pl = Player.get(Player.discord_id == uid)
+        except Player.DoesNotExist:
+            pl = Player.create(
+                discord_id = uid,
+                discord_name = f'<@{uid}>'
+            )
+        if pl.danger_level != ulevel:
+            pl.danger_level = ulevel
+            pl.save()
+            count += 1
+
+    _log.info(f'Dangerous users: {count} entries updated')
 
     if args.check:
         client.plz_check_ip = True
