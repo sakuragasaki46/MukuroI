@@ -49,12 +49,20 @@ class HandbookCog(Cog):
                 if pronouns else
                 T('ehandbook-of').format(name=pl.discord_name)
             ),
-            color=0x0033FF
+            color=(
+                0x990000 if pl.danger_level == 5 else
+                0xee5500 if pl.danger_level == 4 else
+                0x990099 if pl.danger_level == 3 else
+                0x0033ff
+            ),
         )
         embed.add_field(name='ID', value=pl.discord_id)
         embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
         if not u.bot:
             embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
+
+        if u.avatar:
+            embed.set_thumbnail(url=u.avatar.url)
 
         await inter.followup.send(embed=embed)
 

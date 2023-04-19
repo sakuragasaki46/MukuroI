@@ -6,7 +6,7 @@
 + Bots now can receive a role on their own.
 + `check_ip()` is now async.
 + Commands have been split into cogs.
-+ Added pronouns and danger level to `/handbook` command.
++ Added pronouns, danger level and user avatar thumbnail to `/handbook` command.
 + Added handbook CLI, for use by the bot admin.
 + `badusers.txt` changed file format: it now is a list in format `<id>!<danger_level>`.
 + Fixed bug that allowed Macoto’s (coins) to be given by spamming. Additionally, you can now level up
