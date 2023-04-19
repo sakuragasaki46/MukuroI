@@ -28,15 +28,6 @@ class HandbookCog(Cog):
             Option(User, name='u', value='L’utente.', required=False)
         ]
     )
-    @user_command(
-        name='Apri E-Handbook',
-        name_localizations={
-            'en-US': 'Open E-Handbook',
-            'en-GB': 'Open E-Handbook',
-            'it': 'Apri E-Handbook',
-            'fr': 'Ouvre le manuel électronique'
-        }
-    )
     async def cmd_handbook(self, inter: ApplicationContext, u: User = None):
         gc = GuildConfig.from_object(inter.guild)
         T = gc.get_translate()
@@ -62,11 +53,12 @@ class HandbookCog(Cog):
         )
         embed.add_field(name='ID', value=pl.discord_id)
         embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
-        embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
+        if not u.bot:
+            embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
 
         await inter.followup.send(embed=embed)
 
-        if pl.danger_level == 0 and pl.discord_id not in self.dmd_ids:
+        if not u.bot and pl.danger_level == 0 and pl.discord_id not in self.dmd_ids:
             await dm_botmaster(
                 f'Someone requested information for a user whose danger level is not assessed yet.\n'
                 f'Please investigate on this user: {pl.discord_name} <@{pl.discord_id}> ID `{pl.discord_id}`\n'
@@ -79,3 +71,14 @@ class HandbookCog(Cog):
 
             if len(self.dmd_ids) > 50:
                 self.dmd_ids.pop(0)
+
+    
+    cmd_handbook_menu = user_command(
+        name='Apri E-Handbook',
+        name_localizations={
+            'en-US': 'Open E-Handbook',
+            'en-GB': 'Open E-Handbook',
+            'it': 'Apri E-Handbook',
+            'fr': 'Ouvre le manuel électronique'
+        }
+    )(cmd_handbook)
