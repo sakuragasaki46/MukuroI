@@ -1,8 +1,10 @@
-from discord import Interaction, Permissions
+import os
+from discord import Interaction, Permissions, User
 from .models import GuildConfig
 import logging
 
 _log = logging.getLogger(__name__)
+_botmaster = None
 
 from .client import get_client
 
@@ -79,3 +81,37 @@ async def you_do_not_have_permission(inter: Interaction):
         'Non hai i permessi per eseguire questo comando!',
         ephemeral=True
     )
+
+
+async def get_botmaster():
+    global _botmaster
+
+    if not _botmaster:
+        client = get_client()
+
+        if not client:
+            return
+
+        _botmaster = await client.get_or_fetch_user(os.getenv('DISCORD_BOTMASTER_ID'))
+        
+    return _botmaster
+
+def is_botmaster(u: User):
+    if 'DISCORD_BOTMASTER_ID' not in os.environ:
+        return False
+    return int(os.environ['DISCORD_BOTMASTER_ID']) == u.id
+
+
+async def dm_botmaster(msg: str):
+    '''Notifies the botmaster.
+    Useful for missing information.
+    '''
+    botmaster = await get_botmaster()
+    if not botmaster:
+        _log.warn('botmaster user not found')
+        return
+
+    try:
+        await botmaster.send(msg)
+    except Exception:
+        _log.warn('Could not send message to botmaster')

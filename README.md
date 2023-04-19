@@ -39,6 +39,7 @@ Recommended steps:
     1. `DISCORD_TOKEN` for the token
     2. `DISCORD_APPLICATION_ID` for the application ID
     3. `DATABASE_URL` for the database URL (supported: MySQL and SQLite)
+    4. `DISCORD_BOTMASTER_ID` for the botmaster’s user ID
 * Run all the migrations: `pw_migrate python3 -m peewee_migrate migrate --database="$DATABASE_URL"`
 * Done! You can now run this bot as a script.
 
@@ -58,3 +59,5 @@ Also, the definition of “dangerous” is subjective, so every instance of this
 
 * It has synchronous HTTP dependencies despite the bot being async.
 * The whole code has no tests.
+* The current implementation of security requires constant presence of the botmaster in order to work.
+  Moreover, it is implemented using owner-only prefix command, and that’s bad.

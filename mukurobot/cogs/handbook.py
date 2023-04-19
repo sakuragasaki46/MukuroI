@@ -1,14 +1,20 @@
 from discord import ApplicationContext, Embed, Option, User, slash_command, user_command
 from discord.ext.commands import Cog
 
+from ..dsutils import dm_botmaster
 from ..utils import money
 from ..models import GuildConfig, Player
 from ..inclusion import fetch_pronouns, Pronouns
 
 
+
 class HandbookCog(Cog):
     def __init__(self, bot):
         self.bot = bot
+        
+        # List of users with no danger level set.
+        # It resets on every startup, and I’m fine with it
+        self.dmd_ids = []
     
     @slash_command(
         name='handbook', description='Apri il tuo e-handbook.',
@@ -59,3 +65,17 @@ class HandbookCog(Cog):
         embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
 
         await inter.followup.send(embed=embed)
+
+        if pl.danger_level == 0 and pl.discord_id not in self.dmd_ids:
+            await dm_botmaster(
+                f'Someone requested information for a user whose danger level is not assessed yet.\n'
+                f'Please investigate on this user: {pl.discord_name} <@{pl.discord_id}> ID `{pl.discord_id}`\n'
+                f'Once you’re done, please reply with:\n'
+                f'`!dan {pl.discord_id}`\n'
+                f'followed by the danger level (1-5).'
+            )
+
+            self.dmd_ids.append(pl.discord_id)
+
+            if len(self.dmd_ids) > 50:
+                self.dmd_ids.pop(0)

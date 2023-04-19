@@ -1,4 +1,5 @@
-from discord import Bot, Embed, Member
+import re
+from discord import Bot, Embed, Member, Message
 import os
 import logging
 
@@ -25,8 +26,8 @@ class Mukuro(Bot):
             exit()
 
         _log.info(f'Started receiving messages…')
-    async def on_message(self, message):
-        # Message content is not needed at the moment.
+    async def on_message(self, message: Message):
+        # Message content is not needed at the moment, except in DM.
         _log.info(
             'Message received in ' + (
                f'{message.guild.name} #{message.channel.name}' if message.guild else 'DM'
@@ -37,12 +38,30 @@ class Mukuro(Bot):
         if message.author.bot:
             return
         
-        async with ConnectToDatabase(database):
-            pl = Player.from_object(message.author)
-            pl.update_daily_streak()
+        if message.guild:
+            async with ConnectToDatabase(database):
+                pl = Player.from_object(message.author)
+                pl.update_daily_streak()
         
         if message.content:
             _log.debug(f'\x1b[32m{message.content}\x1b[39m')
+
+        if not message.guild and is_botmaster(message.author):
+            # secret botmaster-only commands
+            # XXX is it the best way?
+            if mg := re.match(r'!dan +(\d+) +([1-5])', message.content):
+                uid, level = int(mg.group(1)), int(mg.group(2))
+                async with ConnectToDatabase(database):
+                    try:
+                        pl = Player.get(Player.discord_id == uid)
+                    except Player.DoesNotExist:
+                        pl = Player.create(
+                            discord_id = uid,
+                            discord_name = f'<@{uid}>'
+                        )
+                    pl.danger_level = level
+                    pl.save()
+                    _log.info(f'player {pl.discord_id} danger level updated to {pl.danger_level}')
     async def on_member_join(self, member: Member):
         ## WARNING This requires a Privileged Intent.
         ## When this bot reaches 100 servers, this event handler’s code
@@ -136,4 +155,5 @@ def set_global_client(client: Mukuro) -> Mukuro:
     _client = client
     return client
 
-
+# here because of circular imports
+from .dsutils import is_botmaster
