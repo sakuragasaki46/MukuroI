@@ -9,6 +9,7 @@
 + Added pronouns and danger level to `/handbook` command.
 + Added handbook CLI, for use by the bot admin.
 + `badusers.txt` changed file format: it now is a list in format `<id>!<danger_level>`.
++ Fixed bug that allowed Macoto’s (coins) to be given by spamming.
 
 ## 0.3
 

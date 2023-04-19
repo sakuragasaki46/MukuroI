@@ -4,16 +4,18 @@ Someone said… models? Look at my cosplay of Junko Enoshima :)
 
 import datetime
 import re
-import warnings
 from discord import Guild, User
 from peewee import *
 from playhouse.db_url import connect
 import os
+import logging
 
 from .i18n import get_language
 from .utils import letter_range, superscript_number
 from .dbutils import connect_reconnect
 from itertools import islice
+
+_log = logging.getLogger(__name__)
 
 database = connect_reconnect(connect(os.environ['DATABASE_URL']))
 
@@ -77,8 +79,10 @@ class Player(BaseModel):
                      (then.hour, then.minute, then.second))
                 )
 
+                _log.debug(f'then: {then}, now: {now}, gap: {gap}')
+
                 if gap == 0:
-                    if now.timestamp() // 5 - then.timestamp() // 5 > 0:
+                    if now.timestamp() // 300 - then.timestamp() // 300 > 0:
                         inc = 1
                 elif gap == 1:
                     self.daily_streak += 1
