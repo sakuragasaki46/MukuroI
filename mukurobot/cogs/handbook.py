@@ -39,19 +39,23 @@ class HandbookCog(Cog):
 
         await inter.response.defer()
 
-        embed = Embed(
-            title=T('ehandbook-of').format(name=pl.discord_name),
-            color=0x0033FF
-        )
-        embed.add_field(name='ID', value=pl.discord_id)
-        embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
-        embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
         if pl.pronouns:
             pronouns = Pronouns(pl.pronouns)
         else:
             pronouns = await fetch_pronouns(pl.discord_id)
             pl.pronouns = pronouns.short
             pl.save()
-        embed.add_field(name='Pronouns', value=f'{pronouns}')
+
+        embed = Embed(
+            title=(
+                T('ehandbook-of-pronouns').format(name=pl.discord_name, pronouns=pronouns)
+                if pronouns else
+                T('ehandbook-of').format(name=pl.discord_name)
+            ),
+            color=0x0033FF
+        )
+        embed.add_field(name='ID', value=pl.discord_id)
+        embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
+        embed.add_field(name=T('danger-level'), value=f'`{pl.danger_level_str}`')
 
         await inter.followup.send(embed=embed)

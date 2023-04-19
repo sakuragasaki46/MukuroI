@@ -26,6 +26,7 @@ class Mukuro(Bot):
 
         _log.info(f'Started receiving messages…')
     async def on_message(self, message):
+        # Message content is not needed at the moment.
         _log.info(
             'Message received in ' + (
                f'{message.guild.name} #{message.channel.name}' if message.guild else 'DM'

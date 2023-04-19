@@ -98,7 +98,7 @@ class GuildConfigCog(Cog):
         ]
     )
     async def cmd_say(self, inter: ApplicationContext, msg: str):
-        await inter.response.defer()
+        await inter.response.defer(ephemeral=True)
 
         gc = GuildConfig.from_object(inter.guild)
 
@@ -108,18 +108,18 @@ class GuildConfigCog(Cog):
             if channel:
                 try:
                     await channel.send(msg)
-                    await inter.response.edit_message(
+                    await inter.followup.send(
                         "Messaggio inviato!",
                         ephemeral=True
                     )
                 except Exception:
                     _log.warn(f'Could not send to channel #{channel.name}')
-                    await inter.response.edit_message(
+                    await inter.followup.send(
                         'Messaggio non inviato.',
                         ephemeral=True
                     )
                 return
-        await inter.response.edit_message(
+        await inter.followup.send(
             'Non hai impostato cctv_channel_id, come pensi di poter dire qualcosa?',
             ephemeral=True
         )

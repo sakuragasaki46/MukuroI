@@ -51,6 +51,9 @@ class Pronouns(object):
     def short(self):
         return self._n
 
+    def __bool__(self):
+        return self._n not in (None, 'unspecified')
+
 
 async def fetch_pronouns(discord_id: int):
     async with aiohttp.ClientSession() as client:
