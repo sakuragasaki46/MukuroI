@@ -64,3 +64,12 @@ Also, the definition of “dangerous” is subjective, so every instance of this
 * The whole code has no tests.
 * The current implementation of security requires constant presence of the botmaster in order to work.
   Moreover, it is implemented using owner-only prefix command, and that’s bad.
+* One day S.E.S.S.O. will discover this repository and make some despairful product out of it,
+  without giving me credit. I’m not fine with that, but whatever is meant to happen, happens.
+
+## Final Word
+
+Together we have to strive to mantain the world a livable place, and protect it from the seductions of despair.
+
+This security and fun MIT-licensed bot is an attempt to keep world peace thriving, and to preserve
+everyone’s hope.
