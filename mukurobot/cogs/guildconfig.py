@@ -1,5 +1,6 @@
 import datetime
-from discord import ApplicationContext, AutocompleteContext, ChannelType, Cog, Embed, Option, Permissions, SlashCommandGroup, slash_command
+from discord import ApplicationContext, AutocompleteContext, Cog, Embed, Option, Permissions, SlashCommandGroup, slash_command
+from discord.abc import GuildChannel
 
 from mukurobot.models import GuildConfig
 
@@ -95,10 +96,10 @@ class GuildConfigCog(Cog):
         },
         options=[
             Option(str, name='msg', description='Il tuo messaggio.'),
-            Option(ChannelType, name='channel', description='Il canale dove mandare il messaggio.', required=False)
+            Option(GuildChannel, name='channel', description='Il canale dove mandare il messaggio.', required=False)
         ]
     )
-    async def cmd_say(self, inter: ApplicationContext, msg: str, channel: ChannelType = None):
+    async def cmd_say(self, inter: ApplicationContext, msg: str, channel: GuildChannel = None):
         await inter.response.defer(ephemeral=True)
 
         gc = GuildConfig.from_object(inter.guild)
