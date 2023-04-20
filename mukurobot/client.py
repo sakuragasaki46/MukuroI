@@ -143,6 +143,41 @@ class Mukuro(Bot):
                         f'Hai ricevuto {money(ds_inc)} come bonus 🥳'
                     ))
         
+    async def on_member_remove(self, member: Member):
+        ## WARNING This requires a Privileged Intent.
+        ## When this bot reaches 100 servers, this event handler’s code
+        ## may vanish.
+        async with ConnectToDatabase(database):
+            gc = GuildConfig.from_object(member.guild)
+
+            _log.info(f'Member left: {member.name}')
+
+            pl : Optional[Player] = None
+            if not member.bot:
+                pl = Player.from_object(member)
+
+            if gc.traffic_channel_id:
+                traffic_channel = member.guild.get_channel(gc.traffic_channel_id)
+                
+                if traffic_channel:
+                    try:
+                        if member.bot:
+                            traffic_channel.send(
+                                f'**Bot left:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
+                                f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
+                                f'**Verified:** {member.public_flags.verified_bot}'
+                            )
+                        else:
+                            traffic_channel.send(
+                                f'**Member left:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
+                                f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
+                                f'**Danger level:** `{pl.danger_level_str}`'
+                            )
+                    except Exception:
+                        _log.warn(f'Could not send to channel {traffic_channel.id}')
+                else:
+                    _log.warn(f'Traffic channel not in cache for guild {member.guild.id}')
+
     async def on_member_ban(self, guild, u):
         async with ConnectToDatabase(database):
             _log.info(f'Member banned: {u.name}')
