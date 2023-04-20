@@ -37,7 +37,7 @@ class GuildConfigCog(Cog):
         if not inter.user.guild_permissions.manage_guild:
             return await you_do_not_have_permission(inter)
 
-        gc = GuildConfig.from_object(inter.guild)
+        gc : GuildConfig = GuildConfig.from_object(inter.guild)
 
         tt = int(datetime.datetime.now().timestamp())
         tt -= tt % 86400
@@ -51,7 +51,9 @@ class GuildConfigCog(Cog):
                     f'Daytime Start: <t:{tt + gc.daytime_start * 60}:t>\n'
                     f'Daytime End: <t:{tt + gc.daytime_end * 60}:t>\n'
                     f'Language: **{gc.language}**\n'
-                    f'Bot Role: <@&{gc.bot_role_id}>\n'
+                    f'Bot Role: <@&{gc.bot_role_id}>\n',
+                    f'Risk Checking: **{gc.risk_checking}**\n',
+                    f'Traffic Channel: <#{gc.traffic_channel_id}>\n'
                 )
             ),
             ephemeral = True

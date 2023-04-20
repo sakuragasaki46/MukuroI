@@ -115,7 +115,8 @@ class GuildConfig(BaseModel):
         'daytime_end',
         'language',
         'bot_role_id',
-        'risk_checking'
+        'risk_checking',
+        'traffic_channel_id'
     )
 
     guild_id = BigIntegerField(unique=True)
