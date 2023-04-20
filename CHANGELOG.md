@@ -16,6 +16,7 @@
 + `/say` now takes a `channel` argument, default to `cctv_channel_id`.
 + `check_ip()` is now async.
 + Users joining and leaving are now logged by setting `traffic_channel_id`.
++ `/stats` now shows number of users and guilds mapped.
 
 ## 0.3
 

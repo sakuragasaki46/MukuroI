@@ -1,7 +1,7 @@
 
 from discord import ApplicationContext, Cog, slash_command, __version__ as discord_version
 from .. import __version__ as mukuro_version
-from ..models import database
+from ..models import GuildConfig, database, Player
 
 
 class MetaCog(Cog):
@@ -21,4 +21,6 @@ class MetaCog(Cog):
             f'**Versione Pycord:** {discord_version}\n'
             f'**Versione bot**: {mukuro_version}\n'
             f'**Database**: {database.__class__.__name__}\n'
+            f'**Utenti**: {Player.select().count()}\n'
+            f'**Guilds**: {GuildConfig.select().count()}'
         )

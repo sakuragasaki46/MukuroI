@@ -157,7 +157,7 @@ class GuildConfig(BaseModel):
         if not k in self.CONFIGKEYS:
             return None
 
-        if isinstance(getattr(self, k), (IntegerField, BigIntegerField)) and not v.isdigit():
+        if isinstance(getattr(self, k), (SmallIntegerField, IntegerField, BigIntegerField)) and not v.isdigit():
             if mg := re.match(r'(\d+):(\d+)', v):
                 v = int(mg.group(1)) * 60 + int(mg.group(2))
             else:
