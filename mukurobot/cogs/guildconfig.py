@@ -1,5 +1,5 @@
 import datetime
-from discord import ApplicationContext, AutocompleteContext, Cog, Embed, Option, Permissions, SlashCommandGroup, slash_command
+from discord import ApplicationContext, AutocompleteContext, ChannelType, Cog, Embed, Option, Permissions, SlashCommandGroup, slash_command
 
 from mukurobot.models import GuildConfig
 
@@ -94,31 +94,33 @@ class GuildConfigCog(Cog):
             'it': 'Parla ufficialmente.'
         },
         options=[
-            Option(str, name='msg', description='Il tuo messaggio.')
+            Option(str, name='msg', description='Il tuo messaggio.'),
+            Option(ChannelType, name='channel', description='Il canale dove mandare il messaggio.', required=False)
         ]
     )
-    async def cmd_say(self, inter: ApplicationContext, msg: str):
+    async def cmd_say(self, inter: ApplicationContext, msg: str, channel: ChannelType = None):
         await inter.response.defer(ephemeral=True)
 
         gc = GuildConfig.from_object(inter.guild)
 
-        channel_id = gc.cctv_channel_id or gc.main_channel_id
-        if channel_id:
-            channel = self.bot.get_channel(channel_id)
-            if channel:
-                try:
-                    await channel.send(msg)
-                    await inter.followup.send(
-                        "Messaggio inviato!",
-                        ephemeral=True
-                    )
-                except Exception:
-                    _log.warn(f'Could not send to channel #{channel.name}')
-                    await inter.followup.send(
-                        'Messaggio non inviato.',
-                        ephemeral=True
-                    )
-                return
+        if not channel:
+            channel_id = gc.cctv_channel_id or gc.main_channel_id
+            if channel_id:
+                channel = self.bot.get_channel(channel_id)
+        if channel:
+            try:
+                await channel.send(msg)
+                await inter.followup.send(
+                    "Messaggio inviato!",
+                    ephemeral=True
+                )
+            except Exception:
+                _log.warn(f'Could not send to channel #{channel.name}')
+                await inter.followup.send(
+                    'Messaggio non inviato.',
+                    ephemeral=True
+                )
+            return
         await inter.followup.send(
             'Non hai impostato cctv_channel_id, come pensi di poter dire qualcosa?',
             ephemeral=True

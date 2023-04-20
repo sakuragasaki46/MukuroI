@@ -108,7 +108,7 @@ async def dm_botmaster(msg: str):
     '''
     botmaster = await get_botmaster()
     if not botmaster:
-        _log.warn('botmaster user not found')
+        _log.error('botmaster user not found')
         return
 
     try:

@@ -25,7 +25,7 @@ class BaseModel(Model):
         table_function = lambda cls:f'{os.environ.get("DATABASE_PREFIX","")}{cls.__name__.lower()}'
 
 DANGER_LEVELS = {
-    0: 'Unspecified',
+    0: 'Unscanned',
     1: 'Innocent',
     2: 'Safe',
     3: 'Suspicious',

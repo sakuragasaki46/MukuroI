@@ -13,6 +13,7 @@
   with guild messages only.
 + Botmaster gets now notified via DM whenever a user whose danger level is unassessed is discovered.
   Note: it means a new `DISCORD_BOTMASTER_ID` environment variable needs to be set.
++ `/say` now takes a `channel` argument, default to `cctv_channel_id`.
 
 ## 0.3
 

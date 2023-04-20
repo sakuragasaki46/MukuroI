@@ -47,11 +47,11 @@ Recommended steps:
 
 To simplify management, I created a script named Handbook. You can run it by running 
 `python3 -m mukurobot.handbook`.
-Here you can easily view user info (please note no personal info is collected aside from Discord IDs and names),
-set risk level on users, and export `badusers.txt`.
+Here you can easily view user info (please note no PII is collected aside from Discord IDs, names and 
+pronoun preference), set risk level on users, and export `badusers.txt`.
 
-`badusers.txt` is a list of potentially dangerous user IDs. To prevent sharing PII, I did not ship it with the bot, but
-you have to ask me personally for it.
+`badusers.txt` is a list of potentially dangerous user IDs, loaded on startup.
+To prevent sharing PII, I did not ship it with the bot, but you have to ask me personally for it.
 
 Also, the definition of “dangerous” is subjective, so every instance of this bot has a list on its own.
 
