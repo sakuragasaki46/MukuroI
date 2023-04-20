@@ -1,6 +1,6 @@
 import os
 from discord import Interaction, Permissions, User
-from .models import GuildConfig
+from .models import GuildConfig, Player
 import logging
 
 _log = logging.getLogger(__name__)

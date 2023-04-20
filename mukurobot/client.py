@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 from discord import Bot, Embed, Member, Message
 import os
 import logging
@@ -71,6 +72,32 @@ class Mukuro(Bot):
 
             _log.info(f'Member joined: {member.name}')
 
+            pl : Optional[Player] = None
+            if not member.bot:
+                pl = Player.from_object(member)
+
+            if gc.traffic_channel_id:
+                traffic_channel = member.guild.get_channel(gc.traffic_channel_id)
+                
+                if traffic_channel:
+                    try:
+                        if member.bot:
+                            traffic_channel.send(
+                                f'**Bot joined:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
+                                f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
+                                f'**Verified:** {member.public_flags.verified_bot}'
+                            )
+                        else:
+                            traffic_channel.send(
+                                f'**Member joined:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
+                                f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
+                                f'**Danger level:** `{pl.danger_level_str}`'
+                            )
+                    except Exception:
+                        _log.warn(f'Could not send to channel {traffic_channel.id}')
+                else:
+                    _log.warn(f'Traffic channel not in cache for guild {member.guild.id}')
+
             first_time = False
             
             if member.bot:
@@ -78,7 +105,7 @@ class Mukuro(Bot):
 
                 if bot_role:
                     await member.add_role(bot_role)
-            elif gc.check_bad_user(pl := Player.from_object(member)):
+            elif gc.check_bad_user(pl):
                 try:
                     await member.send(
                         f'Sei statə bannatə automaticamente da {member.guild.name} '
@@ -113,7 +140,7 @@ class Mukuro(Bot):
                     await main_channel.send(embed=Embed(
                         title='Benvenutə!',
                         description=f'{pl.discord_name}, sembra che sia la prima volta qui.\n' +
-                        f'Hai ricevuto {money(50)} come bonus 🥳'
+                        f'Hai ricevuto {money(ds_inc)} come bonus 🥳'
                     ))
         
     async def on_member_ban(self, guild, u):

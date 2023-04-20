@@ -4,8 +4,8 @@
 
 + Added pronouns support. Pronouns can be stored on `Player` model or fetched from PronounDB.
 + Bots now can receive a role on their own.
-+ `check_ip()` is now async.
 + Commands have been split into cogs.
++ `/lore` renamed to `/wiki`.
 + Added pronouns, danger level and user avatar thumbnail to `/handbook` command.
 + Added handbook CLI, for use by the bot admin.
 + `badusers.txt` changed file format: it now is a list in format `<id>!<danger_level>`.
@@ -14,6 +14,8 @@
 + Botmaster gets now notified via DM whenever a user whose danger level is unassessed is discovered.
   Note: it means a new `DISCORD_BOTMASTER_ID` environment variable needs to be set.
 + `/say` now takes a `channel` argument, default to `cctv_channel_id`.
++ `check_ip()` is now async.
++ Users joining and leaving are now logged by setting `traffic_channel_id`.
 
 ## 0.3
 

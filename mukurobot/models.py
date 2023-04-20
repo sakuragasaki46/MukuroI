@@ -11,7 +11,7 @@ import os
 import logging
 
 from .i18n import get_language
-from .utils import letter_range, superscript_number
+from .utils import letter_range
 from .dbutils import connect_reconnect
 from itertools import islice
 
@@ -129,6 +129,7 @@ class GuildConfig(BaseModel):
     language = CharField(16, default='en')
     bot_role_id = BigIntegerField(null=True)
     risk_checking = SmallIntegerField(default=GC_TRANSITIONAL)
+    traffic_channel_id = BigIntegerField(null=True)
 
 
     # helpers

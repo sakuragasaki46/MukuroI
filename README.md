@@ -24,6 +24,7 @@ The configurable variables are:
 * **Language**: The guild locale. Currently supported are Italian and English locale.
 * **Bot role**: The role assigned to all bots.
 * **Risk checking**: transitional (1), strict (2) or disabled (0). Defaults to transitional.
+* **Traffic channel**: The channel used to log joins/leaves.
 
 ## Deployment
 
