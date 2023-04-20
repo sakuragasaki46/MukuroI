@@ -2,7 +2,9 @@
 
 A discord bot for security and fun.
 
-Yes, I made it thinking about the “16th student”, althought I am not a kinnie of that character.
+Yes, I made it thinking about the “16th student”, althought I am ~~not~~ a kinnie of that character.
+
+This is the codebase for Yusurland Security bot.
 
 It provides autoban based on user lists and a cool minigame (coming soon).
 
