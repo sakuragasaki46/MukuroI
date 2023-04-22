@@ -2,6 +2,7 @@ from functools import lru_cache
 import os
 import json
 from collections.abc import Mapping
+from discord import ApplicationContext
 
 class FileDict(Mapping):
     __slots__ = ('filename', 'data')
@@ -56,6 +57,24 @@ def get_language(iso_code):
         return m
     return wrapper
 
+def get_language_from_ctx(ctx: ApplicationContext):
+    if ctx is None:
+        language = 'en'
+    elif ctx.guild:
+        language = ctx.guild.preferred_locale or 'en'
 
+        try:
+            # imported here because circular imports
+            from .models import GuildConfig
+            gc = GuildConfig.from_object(ctx.guild)
+            language = gc.language
+        except Exception:
+            pass
+    elif ctx.locale:
+        language = ctx.locale
+    else:
+        language = 'en'
+
+    return get_language(language)
 
 

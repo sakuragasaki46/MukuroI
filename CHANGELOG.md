@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
++ Fixed i18n bug that prevented some commands from being usable in DM.
++ `/say` and `/guildconfig` are now guild-only.
+
 ## 0.4
 
 + Added pronouns support. Pronouns can be stored on `Player` model or fetched from PronounDB.

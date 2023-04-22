@@ -1,6 +1,7 @@
 from discord.ext.commands import Cog
 from discord import ApplicationContext, Embed, Option, User, slash_command
 
+from ..i18n import get_language_from_ctx
 from ..models import GuildConfig, Player
 from ..utils import money
 
@@ -37,8 +38,7 @@ class EconomyCog(Cog):
         }
     )
     async def cmd_rich(self, inter: ApplicationContext):
-        gc = GuildConfig.from_object(inter.guild)
-        T = gc.get_translate()
+        T = get_language_from_ctx(inter)
 
         richest = Player.select().order_by(Player.balance.desc()).limit(10)
 

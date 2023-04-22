@@ -1,6 +1,7 @@
 from discord import ApplicationContext, Embed, Option, User, slash_command, user_command
 from discord.ext.commands import Cog
 
+from ..i18n import get_language_from_ctx
 from ..dsutils import dm_botmaster
 from ..utils import money
 from ..models import GuildConfig, Player
@@ -29,8 +30,7 @@ class HandbookCog(Cog):
         ]
     )
     async def cmd_handbook(self, inter: ApplicationContext, u: User = None):
-        gc = GuildConfig.from_object(inter.guild)
-        T = gc.get_translate()
+        T = get_language_from_ctx(inter)
         u = u or inter.user
         pl: Player = Player.from_object(u)
 

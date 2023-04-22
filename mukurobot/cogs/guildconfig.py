@@ -20,7 +20,9 @@ class GuildConfigCog(Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    cmd_gc = SlashCommandGroup(name='guildconfig', description='Configura le variabili del server.')
+    cmd_gc = SlashCommandGroup(name='guildconfig', description='Configura le variabili del server.',
+        dm_permission = False
+    )
 
     cmd_gc.default_member_permissions = Permissions(
         manage_guild=True
@@ -99,7 +101,8 @@ class GuildConfigCog(Cog):
         options=[
             Option(str, name='msg', description='Il tuo messaggio.'),
             Option(GuildChannel, name='channel', description='Il canale dove mandare il messaggio.', required=False)
-        ]
+        ],
+        dm_permission=False
     )
     async def cmd_say(self, inter: ApplicationContext, msg: str, channel: GuildChannel = None):
         await inter.response.defer(ephemeral=True)

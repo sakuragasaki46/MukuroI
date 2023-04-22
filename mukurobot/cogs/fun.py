@@ -2,6 +2,7 @@ import random
 from discord import ApplicationContext, slash_command
 from discord.ext.commands import Cog
 
+from ..i18n import get_language_from_ctx
 from ..models import GuildConfig
 
 class FunCog(Cog):
@@ -16,8 +17,7 @@ class FunCog(Cog):
         }
     )
     async def cmd_rr(self, inter: ApplicationContext):
-        gc = GuildConfig.from_object(inter.guild)
-        T = gc.get_translate()
+        T = get_language_from_ctx(inter)
         if random.randint(1, 6) == 6:
             await inter.response.send_message(T('rr-died'))
             #try:

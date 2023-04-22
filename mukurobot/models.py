@@ -4,6 +4,7 @@ Someone said… models? Look at my cosplay of Junko Enoshima :)
 
 import datetime
 import re
+import warnings
 from discord import Guild, User
 from peewee import *
 from playhouse.db_url import connect
@@ -171,6 +172,8 @@ class GuildConfig(BaseModel):
         return v
 
     def get_translate(self):
+        warnings.warn("Use i18n.get_language_from_context() instead", DeprecationWarning)
+
         return get_language(self.language)
 
     def check_bad_user(self, pl: Player) -> bool:
