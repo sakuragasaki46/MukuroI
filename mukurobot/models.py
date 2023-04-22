@@ -158,14 +158,18 @@ class GuildConfig(BaseModel):
         if not k in self.CONFIGKEYS:
             return None
 
-        if isinstance(getattr(self, k), (SmallIntegerField, IntegerField, BigIntegerField)) and not v.isdigit():
-            if mg := re.match(r'(\d+):(\d+)', v):
+        if isinstance(getattr(self.__class__, k), (SmallIntegerField, IntegerField, BigIntegerField)):
+            if v.isdigit():
+                v = int(v)
+            elif mg := re.match(r'(\d+):(\d+)', v):
                 v = int(mg.group(1)) * 60 + int(mg.group(2))
             else:
                 try:
                     v = int(re.search(r'(\d+)', v).group(1))
                 except Exception:
                     return None
+        
+        _log.debug(f'Setting guildconfig value: {self.guild_id}.{k} = {v}')
 
         setattr(self, k, v)
         self.save()

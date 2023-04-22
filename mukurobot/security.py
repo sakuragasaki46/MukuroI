@@ -16,7 +16,7 @@ BAD_USERNAME_PATTERNS = (
 ID_ROW_RE = r'^(\d+)(?:\s*!([1-5]))?'
 
 def is_bad_user(u, /, *, filename='badusers.txt') -> bool:
-    warnings.warn(DeprecationWarning, f"Use GuildConfig.check_bad_user(player) instead.")
+    warnings.warn(f"Use GuildConfig.check_bad_user(player) instead.", DeprecationWarning)
 
     for くま in BAD_USERNAME_PATTERNS:
         if くま in u.name:

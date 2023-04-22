@@ -4,6 +4,9 @@
 
 + Fixed i18n bug that prevented some commands from being usable in DM.
 + `/say` and `/guildconfig` are now guild-only.
++ Added GuildConfig cleanup on guild remove.
++ Fixed bug in `GuildConfig.set_config_key()`.
++ No logs were sent to traffic channel due to coroutines not being awaited. Fixed.
 
 ## 0.4
 

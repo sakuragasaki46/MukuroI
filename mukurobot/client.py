@@ -82,13 +82,13 @@ class Mukuro(Bot):
                 if traffic_channel:
                     try:
                         if member.bot:
-                            traffic_channel.send(
+                            await traffic_channel.send(
                                 f'**Bot joined:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
                                 f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
                                 f'**Verified:** {member.public_flags.verified_bot}'
                             )
                         else:
-                            traffic_channel.send(
+                            await traffic_channel.send(
                                 f'**Member joined:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
                                 f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
                                 f'**Danger level:** `{pl.danger_level_str}`'
@@ -162,13 +162,13 @@ class Mukuro(Bot):
                 if traffic_channel:
                     try:
                         if member.bot:
-                            traffic_channel.send(
+                            await traffic_channel.send(
                                 f'**Bot left:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
                                 f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
                                 f'**Verified:** {member.public_flags.verified_bot}'
                             )
                         else:
-                            traffic_channel.send(
+                            await traffic_channel.send(
                                 f'**Member left:** `{member.name}#{member.discriminator}` (ID {member.id})\n'
                                 f'**Created:** <t:{int(member.created_at.timestamp())}:R>\n'
                                 f'**Danger level:** `{pl.danger_level_str}`'
@@ -201,6 +201,14 @@ class Mukuro(Bot):
                 description=f'{u.name} ({u.id}) è statə bannatə.',
                 color=0xcc0000
             ))
+
+    async def on_guild_remove(self, guild):
+        async with ConnectToDatabase(database):
+            gc: GuildConfig = GuildConfig.from_object(guild)
+
+            _log.info(f'Removed from guild: {gc.guild_name} ID {gc.guild_id})')
+
+            gc.delete_instance()
     async def on_interaction(self, interaction):
         async with ConnectToDatabase(database):
             await super().on_interaction(interaction)    
