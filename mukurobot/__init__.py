@@ -6,7 +6,7 @@ from discord import Intents
 import aiohttp
 import sys
 
-__version__ = '0.4.1-dev'
+__version__ = '0.4.1'
 
 dotenv.load_dotenv()
 
