@@ -146,7 +146,7 @@ class GuildConfigCog(Cog):
     )
 
     ## Guild cleanup handler.
-    @Cog.listener
+    @Cog.listener()
     async def on_guild_remove(self, guild):
         async with ConnectToDatabase(database):
             gc: GuildConfig = GuildConfig.from_object(guild)

@@ -108,7 +108,7 @@ class HandbookCog(Cog):
     )(cmd_handbook)
 
     # Secret command handler.
-    @Cog.listener
+    @Cog.listener()
     async def on_message(self, message: Message):
         if not message.guild and is_botmaster(message.author):
             # secret botmaster-only commands

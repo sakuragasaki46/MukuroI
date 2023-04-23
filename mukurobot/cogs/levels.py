@@ -14,7 +14,7 @@ class LevelsCog(Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @Cog.listener
+    @Cog.listener()
     async def on_message(self, message: Message):
         if message.guild and not message.author.bot:
             async with ConnectToDatabase(database):
