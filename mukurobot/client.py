@@ -63,6 +63,11 @@ class Mukuro(Bot):
                     pl.danger_level = level
                     pl.save()
                     _log.info(f'player {pl.discord_id} danger level updated to {pl.danger_level}')
+                    
+                    try:
+                        await message.add_reaction('✅')
+                    except Exception:
+                        pass
     async def on_member_join(self, member: Member):
         ## WARNING This requires a Privileged Intent.
         ## When this bot reaches 100 servers, this event handler’s code
@@ -136,6 +141,15 @@ class Mukuro(Bot):
                     else:
                         _log.warn('No system channel found.')
                 
+                if pl.danger_level == 0:
+                    await dm_botmaster(
+                        f'A user whose danger level is not assessed yet joined the guild **{member.guild.name}**.\n'
+                        f'Please investigate on this user: {pl.discord_name} <@{pl.discord_id}> ID `{pl.discord_id}`\n'
+                        f'Once you’re done, please reply with:\n'
+                        f'`!dan {pl.discord_id}`\n'
+                        f'followed by the danger level (1-5).'
+                    )
+
                 if first_time and main_channel is not None:
                     await main_channel.send(embed=Embed(
                         title='Benvenutə!',
@@ -226,4 +240,4 @@ def set_global_client(client: Mukuro) -> Mukuro:
     return client
 
 # here because of circular imports
-from .dsutils import is_botmaster
+from .dsutils import is_botmaster, dm_botmaster

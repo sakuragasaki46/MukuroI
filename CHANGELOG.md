@@ -7,6 +7,8 @@
 + Added GuildConfig cleanup on guild remove.
 + Fixed bug in `GuildConfig.set_config_key()`.
 + No logs were sent to traffic channel due to coroutines not being awaited. Fixed.
++ Botmaster is now notified of unscanned members on member join. Previously notifications
+  were sent only when handbook commands were used.
 
 ## 0.4
 
