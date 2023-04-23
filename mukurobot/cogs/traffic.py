@@ -25,6 +25,7 @@ class TrafficCog(Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @Cog.listener
     async def on_member_join(self, member: Member):
         ## WARNING This requires a Privileged Intent.
         ## When this bot reaches 100 servers, this event handler’s code
@@ -114,6 +115,7 @@ class TrafficCog(Cog):
                         f'Hai ricevuto {money(ds_inc)} come bonus 🥳'
                     ))
         
+    @Cog.listener
     async def on_member_remove(self, member: Member):
         ## WARNING This requires a Privileged Intent.
         ## When this bot reaches 100 servers, this event handler’s code
@@ -149,6 +151,7 @@ class TrafficCog(Cog):
                 else:
                     _log.warn(f'Traffic channel not in cache for guild {member.guild.id}')
 
+    @Cog.listener
     async def on_member_ban(self, guild, u):
         async with ConnectToDatabase(database):
             T = get_language_from_ctx(guild=guild)

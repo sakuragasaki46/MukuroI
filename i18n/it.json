@@ -7,5 +7,6 @@
     "balance": "Bilancio",
     "danger-level": "Pericolosità",
     "member-banned": "Membro bannato",
-    "has-been-banned": "{name} (ID {id}) è statə bannatə."
+    "has-been-banned": "{name} (ID {id}) è statə bannatə.",
+    "user-has-balance": "{name} ha {bal}."
 }

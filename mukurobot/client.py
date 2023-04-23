@@ -5,17 +5,12 @@ House of the bot class.
 See LICENSE for license information
 '''
 
-import re
-from typing import Optional
-from discord import Bot, Embed, Member, Message
-import os
+from discord import Bot
 import logging
 
 _log : logging.Logger = logging.getLogger(__name__)
 
-from .utils import money
-from .models import Player, GuildConfig, database
-from .security import is_bad_user
+from .models import database
 from .dbutils import ConnectToDatabase
 
 _client = None
@@ -50,5 +45,4 @@ def set_global_client(client: Mukuro) -> Mukuro:
     _client = client
     return client
 
-# here because of circular imports
-from .dsutils import is_botmaster, dm_botmaster
+

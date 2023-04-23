@@ -7,5 +7,6 @@
     "balance": "Balance",
     "danger-level": "Danger Level",
     "member-banned": "Member banned",
-    "has-been-banned": "{name} (ID {id}) has been banned."
+    "has-been-banned": "{name} (ID {id}) has been banned.",
+    "user-has-balance": "{name} has {bal}."
 }

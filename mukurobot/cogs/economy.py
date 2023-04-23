@@ -30,9 +30,11 @@ class EconomyCog(Cog):
         ]
     )
     async def cmd_bal(self, inter: ApplicationContext, u: User = None):
+        T = get_language_from_ctx(inter)
+        
         u = u or inter.user
         pl = Player.from_object(u)
-        await inter.response.send_message(f'{pl.discord_name} ha {money(pl.balance)}.')
+        await inter.response.send_message(T('user-has-balance').format(name=pl.discord_name, bal=money(pl.balance)))
 
 
     ## /rich ##
