@@ -2,6 +2,9 @@
 This cog’s commands pull out some information from wiki sites.
 
 Unfortunately, as of now they do it synchronously… it means they block the entire bot while they are executing.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
 '''
 
 from discord import ApplicationContext, Cog, Embed, Option, slash_command

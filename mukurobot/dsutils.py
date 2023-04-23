@@ -1,3 +1,10 @@
+'''
+Discord utilities.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
 import os
 from discord import Interaction, Permissions, User
 from .models import GuildConfig, Player

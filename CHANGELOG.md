@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5
+
++ Moved event handlers to cogs, too.
+
 ## 0.4.1
 
 + Fixed i18n bug that prevented some commands from being usable in DM.

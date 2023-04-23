@@ -1,4 +1,9 @@
+'''
+General utilities.
 
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
 
 CURRENCY_SYMBOL = '<:Macoto:1088440100158963733>'
 

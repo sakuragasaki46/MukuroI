@@ -1,8 +1,19 @@
-from functools import lru_cache
+'''
+Ciao, questo è un modulo
+Hello, this is a module
+Salut, ceci est un module
+こんにちは、これはモジュールである
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 import os
 import json
 from collections.abc import Mapping
-from discord import ApplicationContext
+from typing import Optional
+from discord import ApplicationContext, Guild
 
 class FileDict(Mapping):
     __slots__ = ('filename', 'data')
@@ -57,10 +68,12 @@ def get_language(iso_code):
         return m
     return wrapper
 
-def get_language_from_ctx(ctx: ApplicationContext):
+def get_language_from_ctx(ctx: Optional[ApplicationContext] = None, *, guild: Guild = None):
+    guild = ctx.guild if ctx is not None else guild
+
     if ctx is None:
         language = 'en'
-    elif ctx.guild:
+    elif guild:
         language = ctx.guild.preferred_locale or 'en'
 
         try:

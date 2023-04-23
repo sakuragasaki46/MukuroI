@@ -1,10 +1,12 @@
+'''
+Yes, Your Highness!
 
-import logging
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
 
 from .client import Mukuro
-
-_log : logging.Logger = logging.getLogger(__name__)
-
 
 def add_commands(bot: Mukuro, *, exclude=()):
     '''Add commands, one by one.'''
@@ -37,8 +39,15 @@ def add_commands(bot: Mukuro, *, exclude=()):
         from .cogs.meta import MetaCog
         bot.add_cog(MetaCog(bot))
 
+    if 'traffic' not in exclude:
+        from .cogs.traffic import TrafficCog
+        bot.add_cog(TrafficCog(bot))
 
-    # DO NOT INSERT NEW COMMANDS below this line! 
+    if 'levels' not in exclude:
+        from .cogs.levels import LevelsCog
+        bot.add_cog(LevelsCog(bot))
+
+    # DO NOT INSERT NEW COGS below this line! 
 
     return bot
 

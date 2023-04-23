@@ -1,6 +1,10 @@
 '''Security module for the bot.
 Shoot down the enemy.
-After all, the bot’s a sniper, you know.'''
+After all, the bot’s a sniper, you know.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
 
 import os
 import re

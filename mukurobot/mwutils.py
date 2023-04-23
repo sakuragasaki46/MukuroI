@@ -3,6 +3,9 @@ XXX Note of the developer: this module is not expected to block while retrieving
 
 However, due to implementation issues and absence of a decent asyncio-compatible
 MediaWiki-parsing package, it blocks.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
 '''
 
 import logging

@@ -1,12 +1,28 @@
-from discord import ApplicationContext, Embed, Option, User, slash_command, user_command
+'''
+The (in)famous e-handbook.
+Information about users, and beyond.
+
+Privacy note: no PII is collected aside from discord ID, usernames, and pronouns,
+and danger levels and descriptions are subjective.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+import re
+import logging
+from discord import ApplicationContext, Embed, Message, Option, User, slash_command, user_command
 from discord.ext.commands import Cog
 
+from ..dbutils import ConnectToDatabase
+from ..models import database, Player
 from ..i18n import get_language_from_ctx
-from ..dsutils import dm_botmaster
+from ..dsutils import dm_botmaster, is_botmaster
 from ..utils import money
-from ..models import GuildConfig, Player
+from ..models import Player
 from ..inclusion import fetch_pronouns, Pronouns
 
+_log = logging.getLogger(__name__)
 
 
 class HandbookCog(Cog):
@@ -90,3 +106,27 @@ class HandbookCog(Cog):
             'fr': 'Ouvre le manuel électronique'
         }
     )(cmd_handbook)
+
+    # Secret command handler.
+    async def on_message(self, message: Message):
+        if not message.guild and is_botmaster(message.author):
+            # secret botmaster-only commands
+            # XXX is it the best way?
+            if mg := re.match(r'!dan +(\d+) +([1-5])', message.content):
+                uid, level = int(mg.group(1)), int(mg.group(2))
+                async with ConnectToDatabase(database):
+                    try:
+                        pl = Player.get(Player.discord_id == uid)
+                    except Player.DoesNotExist:
+                        pl = Player.create(
+                            discord_id = uid,
+                            discord_name = f'<@{uid}>'
+                        )
+                    pl.danger_level = level
+                    pl.save()
+                    _log.info(f'player {pl.discord_id} danger level updated to {pl.danger_level}')
+                    
+                    try:
+                        await message.add_reaction('✅')
+                    except Exception:
+                        pass

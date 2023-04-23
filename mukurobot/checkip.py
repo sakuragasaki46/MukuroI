@@ -1,3 +1,11 @@
+'''
+Check IP address before connecting. Useful to avoid developing the bot on a public WiFi.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 from types import FunctionType
 import aiohttp
 import logging

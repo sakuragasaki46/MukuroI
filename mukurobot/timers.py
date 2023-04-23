@@ -1,3 +1,11 @@
+'''
+Tick tack, time passes…
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 from aiocron import crontab
 import datetime
 import logging

@@ -1,9 +1,17 @@
+'''
+Guild configuration.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 import datetime
 from discord import ApplicationContext, AutocompleteContext, Cog, Embed, Option, Permissions, SlashCommandGroup, slash_command
 from discord.abc import GuildChannel
 
-from mukurobot.models import GuildConfig
-
+from ..dbutils import ConnectToDatabase
+from ..models import database, GuildConfig
 from ..dsutils import you_do_not_have_permission
 
 import logging
@@ -136,3 +144,12 @@ class GuildConfigCog(Cog):
     cmd_say.default_member_permissions = Permissions(
         manage_guild=True
     )
+
+    ## Guild cleanup handler.
+    async def on_guild_remove(self, guild):
+        async with ConnectToDatabase(database):
+            gc: GuildConfig = GuildConfig.from_object(guild)
+
+            _log.info(f'Removed from guild: {gc.guild_name} ID {gc.guild_id})')
+
+            gc.delete_instance()

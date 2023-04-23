@@ -1,3 +1,11 @@
+'''
+Discord bot for security and fun.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 import asyncio
 import dotenv
 import os
@@ -6,7 +14,7 @@ from discord import Intents
 import aiohttp
 import sys
 
-__version__ = '0.4.1-dev'
+__version__ = '0.5.0-dev'
 
 dotenv.load_dotenv()
 

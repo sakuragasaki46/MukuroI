@@ -1,3 +1,10 @@
+'''
+Database utilities to make Peewee work under asyncio context.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
 from playhouse.shortcuts import ReconnectMixin
 from peewee import MySQLDatabase, _ConnectionState
 from contextvars import ContextVar

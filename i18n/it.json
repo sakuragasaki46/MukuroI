@@ -5,5 +5,7 @@
     "ehandbook-of": "E-Handbook di {name}",
     "ehandbook-of-pronouns": "E-Handbook di {name} ({pronouns})",
     "balance": "Bilancio",
-    "danger-level": "Pericolosità"
+    "danger-level": "Pericolosità",
+    "member-banned": "Membro bannato",
+    "has-been-banned": "{name} (ID {id}) è statə bannatə."
 }

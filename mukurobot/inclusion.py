@@ -2,6 +2,9 @@
 Inclusion and diversity are important.
 
 Even in destruction.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
 '''
 
 import aiohttp

@@ -1,3 +1,11 @@
+'''
+Trivial commands.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 import random
 from discord import ApplicationContext, slash_command
 from discord.ext.commands import Cog

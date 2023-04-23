@@ -1,5 +1,8 @@
 '''
 Someone said… models? Look at my cosplay of Junko Enoshima :)
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
 '''
 
 import datetime

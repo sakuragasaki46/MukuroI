@@ -1,4 +1,8 @@
-'''Functions for the command-line handbook.'''
+'''Functions for the command-line handbook.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
 
 import os
 import re

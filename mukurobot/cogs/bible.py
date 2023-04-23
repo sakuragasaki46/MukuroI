@@ -1,3 +1,12 @@
+'''
+The Bible - La Bibbia (edizione CEI 2008).
+Because some spirituality is needed sometimes.
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
+
 from discord import ApplicationContext, Cog, Embed, Option, slash_command
 
 from ..utils import superscript_number, text_ellipsis

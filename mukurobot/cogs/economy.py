@@ -1,3 +1,10 @@
+'''
+Money, money, money…
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
+
 from discord.ext.commands import Cog
 from discord import ApplicationContext, Embed, Option, User, slash_command
 

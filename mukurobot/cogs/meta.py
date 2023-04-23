@@ -1,3 +1,9 @@
+'''
+Information about the bot itself… what are you even thinking?
+
+(c) 2023 Sakuragasaki46
+See LICENSE for license information
+'''
 
 from discord import ApplicationContext, Cog, slash_command, __version__ as discord_version
 from .. import __version__ as mukuro_version
