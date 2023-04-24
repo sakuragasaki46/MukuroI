@@ -26,7 +26,7 @@ from ..inclusion import fetch_pronouns, Pronouns
 _log = logging.getLogger(__name__)
 
 class HandbookView(View):
-    def __init__(self, user: int):
+    def __init__(self, user: User):
         super().__init__(timeout=None)
         self.user = user
 
