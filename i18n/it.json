@@ -10,5 +10,7 @@
     "has-been-banned": "{name} (ID {id}) è statə bannatə.",
     "user-has-balance": "{name} ha {bal}.",
     "info-from-source": "Informazioni fornite da {source}",
-    "banned-n-times": "Questo utente è stato precedentemente bannato {n} volte."
+    "banned-n-times": "Questo utente è stato precedentemente bannato {n} volte.",
+    "ban-count": "Numero di ban",
+    "description": "Descrizione"
 }

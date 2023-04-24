@@ -11,7 +11,8 @@ See LICENSE for license information
 
 import re
 import logging
-from discord import ApplicationContext, Embed, Message, Option, User, slash_command, user_command
+from discord import ApplicationContext, ButtonStyle, Embed, Message, Option, User, slash_command, user_command
+from discord.ui import View, button
 from discord.ext.commands import Cog
 
 from ..dbutils import ConnectToDatabase
@@ -24,6 +25,46 @@ from ..inclusion import fetch_pronouns, Pronouns
 
 _log = logging.getLogger(__name__)
 
+class HandbookView(View):
+    def __init__(self, user: int):
+        super().__init__(timeout=None)
+        self.user = user
+
+    @button(label='Fact File', row=0, style=ButtonStyle.blurple)
+    async def button_callback(self, button, interaction):
+        T = get_language_from_ctx(interaction)
+
+        async with ConnectToDatabase(database):
+            pl = Player.from_object(self.user)
+
+            if pl.pronouns:
+                pronouns = Pronouns(pl.pronouns)
+            else:
+                pronouns = None
+
+            embed = Embed(
+                title=(
+                    T('ehandbook-of-pronouns').format(name=pl.discord_name, pronouns=pronouns)
+                    if pronouns else
+                    T('ehandbook-of').format(name=pl.discord_name)
+                ),
+                color=(
+                    0x990000 if pl.danger_level == 5 else
+                    0xee5500 if pl.danger_level == 4 else
+                    0x990099 if pl.danger_level == 3 else
+                    0x0033ff
+                )
+            )
+            embed.add_field(name=T("ban-count"), value=f'{pl.ban_count}')
+            if pl.description:
+                embed.add_field(name=T("description"), value=pl.description)
+            
+            if self.user.avatar:
+                embed.set_thumbnail(url=self.user.avatar.url)
+
+            await interaction.response.send_message(
+                embed=embed
+            )
 
 class HandbookCog(Cog):
     def __init__(self, bot):
@@ -70,7 +111,7 @@ class HandbookCog(Cog):
                 0xee5500 if pl.danger_level == 4 else
                 0x990099 if pl.danger_level == 3 else
                 0x0033ff
-            ),
+            )
         )
         embed.add_field(name='ID', value=pl.discord_id)
         embed.add_field(name=T('balance'), value=f'{money(pl.balance)}')
@@ -80,7 +121,7 @@ class HandbookCog(Cog):
         if u.avatar:
             embed.set_thumbnail(url=u.avatar.url)
 
-        await inter.followup.send(embed=embed)
+        await inter.followup.send(embed=embed, view=HandbookView(u))
 
         if not u.bot and pl.danger_level == 0 and pl.discord_id not in self.dmd_ids:
             await dm_botmaster(

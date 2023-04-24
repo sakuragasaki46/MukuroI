@@ -10,5 +10,7 @@
     "has-been-banned": "{name} (ID {id}) has been banned.",
     "user-has-balance": "{name} has {bal}.",
     "info-from-source": "Info from {source}",
-    "banned-n-times": "This user has been banned {n} times before."
+    "banned-n-times": "This user has been banned {n} times before.",
+    "ban-count": "Ban count",
+    "description": "Description"
 }

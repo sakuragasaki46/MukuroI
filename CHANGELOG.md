@@ -5,6 +5,8 @@
 + Schema changes: 
   + Added `description` and `ban_count` to `Player` table.
 + Moved event handlers to cogs, too.
++ `/handbook` has now a separate page where you can see additional info on user
+  (currently ban count and description).
 
 ## 0.4.1
 
