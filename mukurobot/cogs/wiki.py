@@ -10,6 +10,7 @@ See LICENSE for license information
 from discord import ApplicationContext, Cog, Embed, Option, slash_command
 
 from ..mwutils import find_page
+from ..i18n import get_language_from_ctx
 
 class WikiCog(Cog):
     def __init__(self, bot):
@@ -31,6 +32,8 @@ class WikiCog(Cog):
     async def cmd_wiki(self, inter: ApplicationContext, p: str, source: str = 'auto'):
         await inter.response.defer()
 
+        T = get_language_from_ctx(inter)
+
         source = source or 'auto'
         
         page = await find_page(title=p, source=source)
@@ -41,7 +44,7 @@ class WikiCog(Cog):
                     title=page.title,
                     url=page.url,
                     description=page.description,
-                ).set_footer(text=f'Informazioni fornite da {page.source_name}')
+                ).set_footer(text=T('info-from-source').format(name=page.source_name))
             )
         else:
             await inter.followup.send(

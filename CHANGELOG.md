@@ -2,6 +2,8 @@
 
 ## 0.5
 
++ Schema changes: 
+  + Added `description` and `ban_count` to `Player` table.
 + Moved event handlers to cogs, too.
 
 ## 0.4.1

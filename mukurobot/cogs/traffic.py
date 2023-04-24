@@ -159,7 +159,9 @@ class TrafficCog(Cog):
             _log.info(f'Member banned: {u.name}')
 
             gc = GuildConfig.from_object(guild)
-            
+            pl = Player.from_object(u)
+
+            main_channel = None
             if gc.main_channel_id:
                 main_channel = guild.get_channel(gc.main_channel_id)
             else:
@@ -172,8 +174,15 @@ class TrafficCog(Cog):
                 else:
                     _log.warn('No system channel found.')
             
-            await main_channel.send(embed=Embed(
-                title=T('member-banned'),
-                description=T('has-been-banned').format(name=u.name, id=u.id),
-                color=0xcc0000
-            ))
+            if main_channel:
+                await main_channel.send(embed=Embed(
+                    title=T('member-banned'),
+                    description='\n'.join(
+                        T('has-been-banned').format(name=u.name, id=u.id),
+                        T('banned-n-times').format(n=pl.ban_count)
+                    ),
+                    color=0xcc0000
+                ))
+            
+            pl.ban_count += 1
+            pl.save()

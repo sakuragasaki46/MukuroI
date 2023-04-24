@@ -48,8 +48,10 @@ class Player(BaseModel):
     daily_streak = IntegerField(default=0)
     daily_streak_update = DateTimeField(null=True)
 
-    # security (to be compiled by admins)
+    # security (to be compiled by botmaster)
     danger_level = SmallIntegerField(default=0)
+    description = CharField(200, null=True)
+    ban_count = IntegerField(default=0)
 
     # helpers
     @classmethod
