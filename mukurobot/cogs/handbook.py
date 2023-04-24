@@ -154,7 +154,7 @@ class HandbookCog(Cog):
         if not message.guild and is_botmaster(message.author):
             # secret botmaster-only commands
             # XXX is it the best way?
-            if mg := re.match(r'!dan +(\d+) +([1-5])', message.content):
+            if mg := re.match(r'!dan +(\d+) +([1-5])(?: *: *(.+))', message.content):
                 uid, level = int(mg.group(1)), int(mg.group(2))
                 async with ConnectToDatabase(database):
                     try:
@@ -165,6 +165,8 @@ class HandbookCog(Cog):
                             discord_name = f'<@{uid}>'
                         )
                     pl.danger_level = level
+                    if mg.group(3):
+                        pl.description = mg.group(3)
                     pl.save()
                     _log.info(f'player {pl.discord_id} danger level updated to {pl.danger_level}')
                     
