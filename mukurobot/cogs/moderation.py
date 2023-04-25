@@ -100,7 +100,9 @@ class ModerationCog(Cog):
 
         if pl.danger_level < 4:
             await inter.response.send_message(
-                f"Bannare {u.name}#{u.discriminator}?",
+                f"Bannare **{u.name}#{u.discriminator}**?" + (
+                    f'\nQuesto utente è già stato bannato {pl.ban_count} volte.' if pl.ban_count > 0 else ''
+                ),
                 view=BanView(inter.guild, u, reason=reason, dm=dm),
                 ephemeral=True
             )

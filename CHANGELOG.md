@@ -8,6 +8,7 @@
 + `/handbook` has now a separate page where you can see additional info on user
   (currently ban count and description).
 + Added `/ban` command. What is a security bot without a ban command, anyway?
++ `/rich` command shows now top 50 richest users.
 
 ## 0.4.1
 

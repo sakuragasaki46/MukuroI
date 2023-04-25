@@ -9,13 +9,11 @@ See LICENSE for license information
 '''
 
 from typing import Optional
-from discord import ApplicationContext, ButtonStyle, Cog, Embed, Guild, Interaction, Member, Option, Permissions, User
-from discord.ext.commands import slash_command
-from discord.ui import View, button
+from discord import Cog, Embed, Member
 import logging
 
 from ..utils import money
-from ..dsutils import dm_botmaster, you_do_not_have_permission
+from ..dsutils import dm_botmaster
 from ..i18n import get_language_from_ctx
 from ..models import Player, database, GuildConfig
 from ..dbutils import ConnectToDatabase
