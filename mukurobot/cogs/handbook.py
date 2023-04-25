@@ -27,7 +27,7 @@ _log = logging.getLogger(__name__)
 
 class HandbookView(View):
     def __init__(self, user: User):
-        super().__init__(timeout=None)
+        super().__init__(timeout=180.0, disable_on_timeout=True)
         self.user = user
 
     @button(label='Fact File', row=0, style=ButtonStyle.blurple)

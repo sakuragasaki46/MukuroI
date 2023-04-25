@@ -47,6 +47,10 @@ def add_commands(bot: Mukuro, *, exclude=()):
         from .cogs.levels import LevelsCog
         bot.add_cog(LevelsCog(bot))
 
+    if 'moderation' not in exclude:
+        from .cogs.moderation import ModerationCog
+        bot.add_cog(ModerationCog(bot))
+
     # DO NOT INSERT NEW COGS below this line! 
 
     return bot
