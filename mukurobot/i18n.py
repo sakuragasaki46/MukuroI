@@ -91,3 +91,20 @@ def get_language_from_ctx(ctx: Optional[ApplicationContext] = None, *, guild: Gu
     return get_language(language)
 
 
+def lang_join(lang, l):
+    l = list(filter(None, l))
+
+    comma = lang("and-comma")
+    and_ = lang("and")
+
+    if len(l) > 2:
+        return and_.join([
+            comma.join(l[:-1]),
+            l[-1]
+        ])
+    elif len(l) == 2:
+        return and_.join(l)
+    elif len(l) == 1:
+        return l[0]
+    else:
+        return lang("nothing")

@@ -4,11 +4,14 @@
 
 + Schema changes: 
   + Added `description` and `ban_count` to `Player` table.
+  + Added `Meeting` and `MeetingGuest` tables.
 + Moved event handlers to cogs, too.
 + `/handbook` has now a separate page where you can see additional info on user
   (currently ban count and description).
 + Added `/ban` command. What is a security bot without a ban command, anyway?
 + `/rich` command shows now top 50 richest users.
++ Added `/plan` command (currently botmaster-only for privacy reasons).
++ Added a reminder for meetings inside timer.
 
 ## 0.4.1
 

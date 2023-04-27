@@ -12,5 +12,9 @@
     "info-from-source": "Info from {source}",
     "banned-n-times": "This user has been banned {n} times before.",
     "ban-count": "Ban count",
-    "description": "Description"
+    "description": "Description",
+    "invalid-date-time": "Invalid date/time format!",
+    "and": " and ",
+    "and-comma": ", ",
+    "nothing": "nothing"
 }

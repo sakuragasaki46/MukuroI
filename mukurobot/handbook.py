@@ -8,6 +8,7 @@ import os
 import re
 
 from .models import Player
+from .utils import parseInt
 from . import __version__ as mukurobot_version
 
 try:
@@ -15,8 +16,6 @@ try:
 except ImportError:
     pass
 
-def parseInt(i):
-    return int(re.search('\d+', i).group())
 
 def first_line_doc(c):
     if c.__doc__:

@@ -21,7 +21,7 @@ from itertools import islice
 
 _log = logging.getLogger(__name__)
 
-database = connect_reconnect(connect(os.environ['DATABASE_URL']))
+database: Database = connect_reconnect(connect(os.environ['DATABASE_URL']))
 
 class BaseModel(Model):
     class Meta:
@@ -190,6 +190,54 @@ class GuildConfig(BaseModel):
             self.risk_checking >= GC_STRICT and pl.danger_level == 4
         )
 
+
+class Meeting(BaseModel):
+    planned_at = DateTimeField(index=True)
+    host = ForeignKeyField(Player)
+    reason = CharField(64)
+    notify_channel = BigIntegerField(null=True)
+
+    def guests(self):
+        return MeetingGuest.select().where(
+            MeetingGuest.meeting == self
+        )
+
+    def players(self):
+        p = [self.host]
+
+        for g in self.guests():
+            if g.guest_id is not None:
+                try:
+                    p.append(Player.get(Player.discord_id == g.guest_id))
+                except Player.DoesNotExist:
+                    pass
+
+        return p
+
+    def add_guest(self, *, id=None, name=None):
+        if (name is None and id is None) or (name is not None and id is not None):
+            raise ValueError("must specify either name or id")
+        MeetingGuest.create(
+            meeting = self,
+            guest_id = id,
+            guest_name = name
+        )
+
+    class Meta:
+        indexes = (
+            (('planned_at', 'host'), True),
+        )
+
+
+class MeetingGuest(BaseModel):
+    meeting = ForeignKeyField(Meeting)
+    guest_id = BigIntegerField(null=True)
+    guest_name = CharField(32, null=True)
+
+    class Meta:
+        indexes = (
+            (("meeting", "guest_id", "guest_name"), True),
+        )
 
 # RELIGION
 

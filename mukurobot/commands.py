@@ -51,6 +51,10 @@ def add_commands(bot: Mukuro, *, exclude=()):
         from .cogs.moderation import ModerationCog
         bot.add_cog(ModerationCog(bot))
 
+    if 'planner' not in exclude:
+        from .cogs.planner import PlannerCog
+        bot.add_cog(PlannerCog(bot))
+
     # DO NOT INSERT NEW COGS below this line! 
 
     return bot
