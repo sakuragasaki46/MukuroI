@@ -11,7 +11,7 @@ See LICENSE for license information
 
 import re
 import logging
-from discord import ApplicationContext, ButtonStyle, Embed, Message, Option, User, slash_command, user_command
+from discord import ApplicationContext, ButtonStyle, Embed, Interaction, Message, Option, User, slash_command, user_command
 from discord.ui import View, button
 from discord.ext.commands import Cog
 
@@ -31,7 +31,7 @@ class HandbookView(View):
         self.user = user
 
     @button(label='Fact File', row=0, style=ButtonStyle.blurple)
-    async def button_callback(self, button, interaction):
+    async def button_callback(self, button, interaction: Interaction):
         T = get_language_from_ctx(interaction)
 
         async with ConnectToDatabase(database):
@@ -63,7 +63,8 @@ class HandbookView(View):
                 embed.set_thumbnail(url=self.user.avatar.url)
 
             await interaction.response.send_message(
-                embed=embed
+                embed=embed,
+                ephemeral=True
             )
 
 class HandbookCog(Cog):
@@ -154,7 +155,7 @@ class HandbookCog(Cog):
         if not message.guild and is_botmaster(message.author):
             # secret botmaster-only commands
             # XXX is it the best way?
-            if mg := re.match(r'!dan +(\d+) +([1-5])(?: *: *(.+))', message.content):
+            if mg := re.match(r'!dan +(\d+) +([1-5])(?: *: *(.+))?', message.content):
                 uid, level = int(mg.group(1)), int(mg.group(2))
                 async with ConnectToDatabase(database):
                     try:
