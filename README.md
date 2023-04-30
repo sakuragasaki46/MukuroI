@@ -1,5 +1,9 @@
 # MukuroI
 
+**DEVELOPMENT STOPPED. I stopped using discord, and my bot account associated with this code has been deleted. 0.5.0 is the final release. Good luck.**
+
+[Read my article about why you shouldn’t use Discord (sorry for Italian hehe)](https://blog.yusurland.xyz/2023/04/29/discord-potrebbe-portare-me-e-altre-persone-fragili-alla-morte/)
+
 A discord bot for security and fun.
 
 Yes, I made it thinking about the “16th student”, althought I am ~~not~~ a kinnie of that character.
